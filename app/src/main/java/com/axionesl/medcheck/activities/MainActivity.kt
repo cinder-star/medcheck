@@ -1,7 +1,8 @@
-package com.axionesl.medcheck
+package com.axionesl.medcheck.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.axionesl.medcheck.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
