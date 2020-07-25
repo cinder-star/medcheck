@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatSpinner
@@ -23,6 +24,7 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var fullName: TextInputEditText
     private lateinit var accountType: AppCompatSpinner
     private lateinit var signUp: Button
+    private lateinit var progressBar: ProgressBar
     private val auth = Firebase.auth
 
 
@@ -40,12 +42,14 @@ class SignUpActivity : AppCompatActivity() {
         fullName = findViewById(R.id.full_name)
         accountType = findViewById(R.id.account_type)
         signUp = findViewById(R.id.sign_up)
+        progressBar = findViewById(R.id.progress_bar)
     }
 
     private fun bindListeners() {
         signUp.setOnClickListener {
             signUp.hideKeyboard()
             if (validate()) {
+                progressBar.visibility = View.VISIBLE
                 makeUser(email.text.toString(), password.text.toString())
             }
         }
@@ -78,6 +82,7 @@ class SignUpActivity : AppCompatActivity() {
     private fun makeUser(email: String, password: String) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnSuccessListener {
+                progressBar.visibility = View.GONE
                 val user = User(
                     auth.currentUser!!.uid,
                     email,
@@ -88,6 +93,7 @@ class SignUpActivity : AppCompatActivity() {
                 changeActivity()
             }
             .addOnFailureListener {
+                progressBar.visibility = View.GONE
                 Toast.makeText(this, "Sign Up failed", Toast.LENGTH_SHORT).show()
             }
     }
