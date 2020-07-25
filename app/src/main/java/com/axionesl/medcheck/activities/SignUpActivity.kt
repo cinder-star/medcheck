@@ -1,7 +1,10 @@
 package com.axionesl.medcheck.activities
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -41,6 +44,7 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun bindListeners() {
         signUp.setOnClickListener {
+            signUp.hideKeyboard()
             if (validate()) {
                 makeUser(email.text.toString(), password.text.toString())
             }
@@ -81,6 +85,7 @@ class SignUpActivity : AppCompatActivity() {
                     accountType.selectedItem.toString()
                 )
                 DatabaseWriter.write("/user/"+auth.currentUser!!.uid, user)
+                changeActivity()
             }
             .addOnFailureListener {
                 Toast.makeText(this, "Sign Up failed", Toast.LENGTH_SHORT).show()
@@ -91,5 +96,10 @@ class SignUpActivity : AppCompatActivity() {
         val i = Intent(this, MainActivity::class.java)
         i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(i)
+    }
+
+    private fun View.hideKeyboard() {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(windowToken, 0)
     }
 }
