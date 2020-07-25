@@ -12,6 +12,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
+        android:hint="@string/full_name">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/full_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
         android:hint="@string/email">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -59,7 +74,7 @@
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
-        android:entries="@array/account_type"/>
+        android:entries="@array/account_type" />
 
     <Button
         android:id="@+id/sign_up"
