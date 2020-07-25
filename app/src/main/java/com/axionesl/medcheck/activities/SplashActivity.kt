@@ -1,8 +1,8 @@
 package com.axionesl.medcheck.activities
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.axionesl.medcheck.R
 
 class SplashActivity : AppCompatActivity() {

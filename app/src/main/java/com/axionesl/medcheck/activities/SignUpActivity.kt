@@ -1,15 +1,16 @@
 package com.axionesl.medcheck.activities
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatSpinner
 import com.axionesl.medcheck.R
+import com.axionesl.medcheck.domains.User
+import com.axionesl.medcheck.repository.DatabaseWriter
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 class SignUpActivity : AppCompatActivity() {
@@ -20,7 +21,7 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var accountType: AppCompatSpinner
     private lateinit var signUp: Button
     private val auth = Firebase.auth
-    private val database = Firebase.database.reference
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,16 +42,15 @@ class SignUpActivity : AppCompatActivity() {
     private fun bindListeners() {
         signUp.setOnClickListener {
             if (validate()) {
-                val i = Intent(this, MainActivity::class.java)
-                i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(i)
+                makeUser(email.text.toString(), password.text.toString())
             }
         }
     }
 
     private fun validate(): Boolean {
         var result = true
-        val textFields: ArrayList<TextInputEditText> = arrayListOf(email, password, confirmPassword, fullName)
+        val textFields: ArrayList<TextInputEditText> =
+            arrayListOf(email, password, confirmPassword, fullName)
         textFields.forEach { e ->
             if (e.text.toString().isEmpty()) {
                 e.error = "Field cannot be empty"
@@ -69,5 +69,27 @@ class SignUpActivity : AppCompatActivity() {
             result = false
         }
         return result
+    }
+
+    private fun makeUser(email: String, password: String) {
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnSuccessListener {
+                val user = User(
+                    auth.currentUser!!.uid,
+                    email,
+                    fullName.text.toString(),
+                    accountType.selectedItem.toString()
+                )
+                DatabaseWriter.write("/user/"+auth.currentUser!!.uid, user)
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Sign Up failed", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun changeActivity() {
+        val i = Intent(this, MainActivity::class.java)
+        i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(i)
     }
 }
