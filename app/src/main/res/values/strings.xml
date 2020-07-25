@@ -4,4 +4,8 @@
     <string name="password">Password</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="sign_up">Sign Up</string>
+    <string-array name="account_type">
+        <item>Doctor</item>
+        <item>Patient</item>
+    </string-array>
 </resources>
