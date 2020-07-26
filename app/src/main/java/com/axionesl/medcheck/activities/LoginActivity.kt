@@ -31,8 +31,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun bindWidgets() {
-        email = findViewById(R.id.credential)
-        password = findViewById(R.id.password)
+        email = findViewById(R.id.credential_value)
+        password = findViewById(R.id.password_value)
         logIn = findViewById(R.id.log_in)
         progressBar = findViewById(R.id.progress_bar)
         signUpRedirect = findViewById(R.id.redirect)
@@ -68,9 +68,11 @@ class LoginActivity : AppCompatActivity() {
     private fun loginUser(email: String, password: String) {
         auth.signInWithEmailAndPassword(email, password)
             .addOnSuccessListener {
+                progressBar.visibility = View.GONE
                 changeActivity()
             }
             .addOnFailureListener {
+                progressBar.visibility = View.GONE
                 Toast.makeText(this, "Login Failed!", Toast.LENGTH_SHORT).show()
             }
     }
