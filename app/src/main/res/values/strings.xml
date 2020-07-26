@@ -5,6 +5,9 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="sign_up">Sign Up</string>
     <string name="full_name">Full Name</string>
+    <string name="login">Login</string>
+    <string name="not_account">Don\'t have an account? Create\u0020</string>
+    <string name="here">here</string>
     <string-array name="account_type">
         <item>Doctor</item>
         <item>Patient</item>
