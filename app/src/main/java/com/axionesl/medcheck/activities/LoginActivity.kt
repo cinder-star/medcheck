@@ -7,6 +7,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.axionesl.medcheck.R
@@ -19,6 +20,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var password: TextInputEditText
     private lateinit var logIn: Button
     private lateinit var progressBar: ProgressBar
+    private lateinit var signUpRedirect: TextView
     private val auth = Firebase.auth
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,6 +35,7 @@ class LoginActivity : AppCompatActivity() {
         password = findViewById(R.id.password)
         logIn = findViewById(R.id.log_in)
         progressBar = findViewById(R.id.progress_bar)
+        signUpRedirect = findViewById(R.id.redirect)
     }
 
     private fun bindListeners() {
@@ -42,6 +45,9 @@ class LoginActivity : AppCompatActivity() {
                 progressBar.visibility = View.VISIBLE
                 loginUser(email.text.toString(), password.text.toString())
             }
+        }
+        signUpRedirect.setOnClickListener {
+            startActivity(Intent(this, SignUpActivity::class.java))
         }
     }
 
