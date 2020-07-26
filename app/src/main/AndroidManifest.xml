@@ -3,18 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.axionesl.medcheck">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".MedCheck"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:name=".MedCheck"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
-        <activity android:name=".activities.LoginActivity"/>
+        <activity android:name=".activities.LoginActivity" />
         <activity android:name=".activities.SignUpActivity" />
         <activity android:name=".activities.SplashActivity">
             <intent-filter>

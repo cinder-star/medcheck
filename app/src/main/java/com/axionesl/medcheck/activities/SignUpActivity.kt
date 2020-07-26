@@ -89,7 +89,7 @@ class SignUpActivity : AppCompatActivity() {
                     fullName.text.toString(),
                     accountType.selectedItem.toString()
                 )
-                DatabaseWriter.write("/user/"+auth.currentUser!!.uid, user)
+                DatabaseWriter.write("/user/" + auth.currentUser!!.uid, user)
                 changeActivity()
             }
             .addOnFailureListener {
