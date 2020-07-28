@@ -11,7 +11,7 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
-        if (checkUser()){
+        if (checkUser()) {
             changeActivity(MainActivity::class.java)
         } else {
             changeActivity(LoginActivity::class.java)
