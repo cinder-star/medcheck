@@ -14,7 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
-        <activity android:name=".activities.PatientActivity"></activity>
+        <activity android:name=".activities.AddTestActivity"></activity>
+        <activity android:name=".activities.PatientActivity" />
         <activity android:name=".activities.LoginActivity" />
         <activity android:name=".activities.SignUpActivity" />
         <activity android:name=".activities.SplashActivity">

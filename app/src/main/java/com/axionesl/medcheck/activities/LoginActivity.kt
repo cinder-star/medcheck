@@ -11,9 +11,16 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.axionesl.medcheck.R
+import com.axionesl.medcheck.domains.User
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
+import io.paperdb.Paper
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var email: TextInputEditText
@@ -68,7 +75,6 @@ class LoginActivity : AppCompatActivity() {
     private fun loginUser(email: String, password: String) {
         auth.signInWithEmailAndPassword(email, password)
             .addOnSuccessListener {
-                progressBar.visibility = View.GONE
                 changeActivity()
             }
             .addOnFailureListener {
@@ -78,9 +84,32 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun changeActivity() {
-        val i = Intent(this, MainActivity::class.java)
-        i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(i)
+        val userReference = Firebase.database.reference.child("/user/")
+        userReference.addListenerForSingleValueEvent(object: ValueEventListener{
+            override fun onCancelled(error: DatabaseError) {}
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                snapshot.children.forEach{
+                    val user = it.getValue<User>()
+                    if (user!!.id == Firebase.auth.currentUser!!.uid) {
+                        Paper.book().write("account_type", user.accountType)
+                        progressBar.visibility = View.GONE
+                        if (user.accountType == "Patient"){
+                            changeActivity(PatientActivity::class.java)
+                        } else {
+                            changeActivity(MainActivity::class.java)
+                        }
+                    }
+                }
+            }
+
+            fun<T> changeActivity(jClass: Class<T>) {
+                val i = Intent(this@LoginActivity, jClass)
+                i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(i)
+            }
+        })
+
     }
 
     private fun View.hideKeyboard() {

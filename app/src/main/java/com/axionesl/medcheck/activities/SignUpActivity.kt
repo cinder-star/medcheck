@@ -16,6 +16,7 @@ import com.axionesl.medcheck.repository.DatabaseWriter
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import io.paperdb.Paper
 
 class SignUpActivity : AppCompatActivity() {
     private lateinit var email: TextInputEditText
@@ -89,8 +90,13 @@ class SignUpActivity : AppCompatActivity() {
                     fullName.text.toString(),
                     accountType.selectedItem.toString()
                 )
+                Paper.book().write("account_type", user.accountType)
                 DatabaseWriter.write("/user/" + auth.currentUser!!.uid, user)
-                changeActivity()
+                if (user.accountType == "Patient") {
+                    changeActivity(PatientActivity::class.java)
+                } else {
+                    changeActivity(MainActivity::class.java)
+                }
             }
             .addOnFailureListener {
                 progressBar.visibility = View.GONE
@@ -98,9 +104,9 @@ class SignUpActivity : AppCompatActivity() {
             }
     }
 
-    private fun changeActivity() {
-        val i = Intent(this, MainActivity::class.java)
-        i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+    private fun <T> changeActivity(jClass: Class<T>) {
+        val i = Intent(this, jClass)
+        i.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
         startActivity(i)
     }
 
