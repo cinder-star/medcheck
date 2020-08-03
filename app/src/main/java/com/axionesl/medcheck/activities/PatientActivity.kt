@@ -46,11 +46,14 @@ class PatientActivity : AppCompatActivity() {
 
     private fun prepareRecyclerView() {
         val uid = Firebase.auth.currentUser!!.uid
+        val ref = Firebase.database.reference.child("/tests/")
+        ref.keepSynced(true)
         val query =
-            Firebase.database.reference.child("/tests/").orderByChild("patient").equalTo(uid)
+            ref.orderByChild("patient").equalTo(uid)
         val options = FirebaseRecyclerOptions.Builder<Test>()
             .setQuery(query, Test::class.java)
             .build()
+
         val adapter = PatientAdapter(this, options)
         testList.adapter = adapter
         adapter.startListening()
