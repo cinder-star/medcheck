@@ -10,7 +10,6 @@ import com.axionesl.medcheck.domains.Test
 import com.axionesl.medcheck.utils.PatientAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.firebase.FirebaseOptions
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase

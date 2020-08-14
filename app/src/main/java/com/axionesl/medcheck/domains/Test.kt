@@ -1,6 +1,6 @@
 package com.axionesl.medcheck.domains
 
-data class Test (
+data class Test(
     val id: String? = null,
     val weight: Double? = 0.0,
     val height: String? = null,

@@ -85,16 +85,16 @@ class LoginActivity : AppCompatActivity() {
 
     private fun changeActivity() {
         val userReference = Firebase.database.reference.child("/user/")
-        userReference.addListenerForSingleValueEvent(object: ValueEventListener{
+        userReference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {}
 
             override fun onDataChange(snapshot: DataSnapshot) {
-                snapshot.children.forEach{
+                snapshot.children.forEach {
                     val user = it.getValue<User>()
                     if (user!!.id == Firebase.auth.currentUser!!.uid) {
                         Paper.book().write("user", user)
                         progressBar.visibility = View.GONE
-                        if (user.accountType == "Patient"){
+                        if (user.accountType == "Patient") {
                             changeActivity(PatientActivity::class.java)
                         } else {
                             changeActivity(MainActivity::class.java)
@@ -103,7 +103,7 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
 
-            fun<T> changeActivity(jClass: Class<T>) {
+            fun <T> changeActivity(jClass: Class<T>) {
                 val i = Intent(this@LoginActivity, jClass)
                 i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(i)

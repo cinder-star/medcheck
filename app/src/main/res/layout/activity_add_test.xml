@@ -27,17 +27,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <RadioButton
             android:id="@+id/feet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/feet_inch" />
+
         <RadioButton
             android:id="@+id/cm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/cm"
-            android:checked="true"/>
+            android:checked="true"
+            android:text="@string/cm" />
     </RadioGroup>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -55,21 +57,23 @@
             android:inputType="numberDecimal" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
     <LinearLayout
         android:id="@+id/height_ft_inch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="1.0"
         android:baselineAligned="false"
-        android:visibility="gone">
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:weightSum="1.0">
+
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
-            android:layout_weight="0.5"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="3dp"
+            android:layout_weight="0.5"
             android:hint="@string/height_feet">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -79,13 +83,14 @@
                 android:inputType="numberDecimal" />
 
         </com.google.android.material.textfield.TextInputLayout>
+
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
-            android:layout_weight="0.5"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
             android:layout_marginStart="3dp"
+            android:layout_marginEnd="20dp"
+            android:layout_weight="0.5"
             android:hint="@string/height_inch">
 
             <com.google.android.material.textfield.TextInputEditText

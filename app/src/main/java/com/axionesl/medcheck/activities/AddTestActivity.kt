@@ -39,7 +39,7 @@ class AddTestActivity : AppCompatActivity() {
         bindWidgets()
         bindListeners()
     }
-    
+
     private fun bindWidgets() {
         heightCm = findViewById(R.id.height_cm)
         heightCmHolder = findViewById(R.id.height_cm_holder)
@@ -56,7 +56,7 @@ class AddTestActivity : AppCompatActivity() {
         heightFtValue = findViewById(R.id.height_feet)
         heightInchValue = findViewById(R.id.height_inch)
     }
-    
+
     private fun bindListeners() {
         radioGroup.setOnCheckedChangeListener { _, i ->
             val radioButton: RadioButton = findViewById(i)
@@ -74,7 +74,7 @@ class AddTestActivity : AppCompatActivity() {
         createTest.setOnClickListener {
             if (validate()) {
                 val test: Test = getTestData()
-                DatabaseWriter.write("/tests/"+test.id, test)
+                DatabaseWriter.write("/tests/" + test.id, test)
                 finish()
             }
         }
@@ -114,19 +114,22 @@ class AddTestActivity : AppCompatActivity() {
         val radioButton: RadioButton = findViewById(buttonId)
         val text = radioButton.text.toString()
         if (text == "Cm") {
-            height = heightCm.text.toString().toDouble()*0.01
+            height = heightCm.text.toString().toDouble() * 0.01
         } else {
-            height = heightFtValue.text.toString().toDouble()*12.0+heightInchValue.text.toString().toDouble()
+            height =
+                heightFtValue.text.toString().toDouble() * 12.0 + heightInchValue.text.toString()
+                    .toDouble()
             height *= 0.0254
         }
-        return (weight.text.toString().toDouble())/height
+        return (weight.text.toString().toDouble()) / height
     }
 
     private fun validate(): Boolean {
         var value = true
-        val texts: ArrayList<TextInputEditText> = arrayListOf(weight, bpm, bloodPressure, glucoseLevel, oxygenLevel, temperature)
+        val texts: ArrayList<TextInputEditText> =
+            arrayListOf(weight, bpm, bloodPressure, glucoseLevel, oxygenLevel, temperature)
         texts.forEach {
-            if (it.text?.isEmpty()!!){
+            if (it.text?.isEmpty()!!) {
                 it.error = "Cannot be empty!"
                 it.requestFocus()
                 value = false
@@ -136,18 +139,18 @@ class AddTestActivity : AppCompatActivity() {
         val radioButton: RadioButton = findViewById(buttonId)
         val text = radioButton.text.toString()
         if (text == "Cm") {
-            if (heightCm.text!!.isEmpty()){
+            if (heightCm.text!!.isEmpty()) {
                 heightCm.error = "Cannot be empty!"
                 heightCm.requestFocus()
                 value = false
             }
         } else {
-            if (heightFtValue.text!!.isEmpty()){
+            if (heightFtValue.text!!.isEmpty()) {
                 heightFtValue.error = "Cannot be empty!"
                 heightFtValue.requestFocus()
                 value = false
             }
-            if (heightInchValue.text!!.isEmpty()){
+            if (heightInchValue.text!!.isEmpty()) {
                 heightInchValue.error = "Cannot be empty!"
                 heightInchValue.requestFocus()
                 value = false
@@ -163,7 +166,7 @@ class AddTestActivity : AppCompatActivity() {
         return if (text == "Cm") {
             heightCm.text.toString() + "cm"
         } else {
-            heightFtValue.text.toString()+"ft. "+ heightInchValue.text.toString()+"in."
+            heightFtValue.text.toString() + "ft. " + heightInchValue.text.toString() + "in."
         }
     }
 }
