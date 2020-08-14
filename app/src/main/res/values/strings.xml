@@ -14,6 +14,19 @@
     <string name="checked_by">Checked by:</string>
     <string name="mobile_number">Mobile Number (i.e: 01XXXXXXXXX)</string>
     <string name="date">Date</string>
+    <string name="height_cm">Height(cm)</string>
+    <string name="weight">Weight(Kg)</string>
+    <string name="bpm">BPM</string>
+    <string name="blood_pressure">Blood Pressure</string>
+    <string name="glucose_level">Glucose Level</string>
+    <string name="oxygen_level">Oxygen Level</string>
+    <string name="temperature">Temperature</string>
+    <string name="problem_details">Problem Details</string>
+    <string name="create_test">Create Test</string>
+    <string name="feet_inch">Feet-Inch</string>
+    <string name="cm">Cm</string>
+    <string name="height_inch">Height(inch)</string>
+    <string name="height_feet">Height(feet)</string>
     <string-array name="account_type">
         <item>Doctor</item>
         <item>Patient</item>
