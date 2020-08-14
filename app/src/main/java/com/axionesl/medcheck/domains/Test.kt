@@ -10,5 +10,6 @@ data class Test (
     val oxygenLevel: Double? = 0.0,
     var status: String? = "In Queue",
     var checkedBy: String? = null,
-    var patient: String? = null
+    var patient: String? = null,
+    var date: String? = null
 )

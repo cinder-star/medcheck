@@ -23,6 +23,7 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var password: TextInputEditText
     private lateinit var confirmPassword: TextInputEditText
     private lateinit var fullName: TextInputEditText
+    private lateinit var mobileNumber: TextInputEditText
     private lateinit var accountType: AppCompatSpinner
     private lateinit var signUp: Button
     private lateinit var progressBar: ProgressBar
@@ -42,6 +43,7 @@ class SignUpActivity : AppCompatActivity() {
         confirmPassword = findViewById(R.id.confirm_password)
         fullName = findViewById(R.id.full_name)
         accountType = findViewById(R.id.account_type)
+        mobileNumber = findViewById(R.id.mobile_number)
         signUp = findViewById(R.id.sign_up)
         progressBar = findViewById(R.id.progress_bar)
     }
@@ -77,6 +79,12 @@ class SignUpActivity : AppCompatActivity() {
             confirmPassword.requestFocus()
             result = false
         }
+        val regex = "(01[356789][0-9]{8})".toRegex()
+        val input = mobileNumber.text.toString()
+        if (!regex.matches(input)) {
+            mobileNumber.error = "Invalid Mobile Number!"
+            result = false
+        }
         return result
     }
 
@@ -88,6 +96,7 @@ class SignUpActivity : AppCompatActivity() {
                     auth.currentUser!!.uid,
                     email,
                     fullName.text.toString(),
+                    mobileNumber.text.toString(),
                     accountType.selectedItem.toString()
                 )
                 Paper.book().write("account_type", user.accountType)

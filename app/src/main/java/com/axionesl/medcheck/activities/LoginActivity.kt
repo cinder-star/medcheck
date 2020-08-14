@@ -92,7 +92,7 @@ class LoginActivity : AppCompatActivity() {
                 snapshot.children.forEach{
                     val user = it.getValue<User>()
                     if (user!!.id == Firebase.auth.currentUser!!.uid) {
-                        Paper.book().write("account_type", user.accountType)
+                        Paper.book().write("user", user)
                         progressBar.visibility = View.GONE
                         if (user.accountType == "Patient"){
                             changeActivity(PatientActivity::class.java)

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.axionesl.medcheck.R
+import com.axionesl.medcheck.domains.User
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import io.paperdb.Paper
@@ -13,8 +14,8 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
         if (checkUser()) {
-            val type: String = Paper.book().read<String>("account_type", null)
-            if (type == "Patient"){
+            val user: User = Paper.book().read<User>("user", null)
+            if (user.accountType == "Patient"){
                 changeActivity(PatientActivity::class.java)
             } else {
                 changeActivity(MainActivity::class.java)

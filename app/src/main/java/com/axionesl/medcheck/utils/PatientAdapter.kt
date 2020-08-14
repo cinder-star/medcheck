@@ -31,9 +31,11 @@ class PatientAdapter(private val context: Context, options: FirebaseRecyclerOpti
             val testId: TextView = itemView.findViewById(R.id.test_id)
             val testStatus: TextView = itemView.findViewById(R.id.test_status)
             val testCheckedBy: TextView = itemView.findViewById(R.id.test_checked_by)
+            val testDate: TextView = itemView.findViewById(R.id.date)
 
             testId.text = test.id
             testStatus.text = test.status
+            testDate.text = test.date
             if (test.checkedBy != null) {
                 testCheckedBy.text = test.checkedBy
             }
