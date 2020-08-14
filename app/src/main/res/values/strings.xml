@@ -27,6 +27,19 @@
     <string name="cm">Cm</string>
     <string name="height_inch">Height(inch)</string>
     <string name="height_feet">Height(feet)</string>
+    <string name="patient_name">Patient Name:</string>
+    <string name="height">Height:</string>
+    <string name="test_weight">Weight:</string>
+    <string name="test_bmi">BMI:</string>
+    <string name="test_bpm">BPM:</string>
+    <string name="test_oxygen_level">Oxygen Level:</string>
+    <string name="test_glucose_level">Glucose Level:</string>
+    <string name="test_temperature">Temperature:</string>
+    <string name="test_problem_details">Problem Details:</string>
+    <string name="test_status">Status:</string>
+    <string name="in_queue">In Queue</string>
+    <string name="test_checked_by">Checked By:</string>
+    <string name="test_date">Date:</string>
     <string-array name="account_type">
         <item>Doctor</item>
         <item>Patient</item>
