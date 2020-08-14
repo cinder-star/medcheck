@@ -1,9 +1,19 @@
 package com.axionesl.medcheck.activities
 
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
 import com.axionesl.medcheck.R
+import com.axionesl.medcheck.domains.Test
+import com.axionesl.medcheck.domains.User
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.database.ktx.getValue
+import com.google.firebase.ktx.Firebase
+import io.paperdb.Paper
 
 class TestDetailsActivity : AppCompatActivity() {
     private lateinit var testId: TextView
@@ -23,6 +33,52 @@ class TestDetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test_details)
         bindWidgets()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val reference = Firebase
+            .database
+            .reference
+            .child("/tests/")
+            .orderByChild("id")
+            .equalTo(Paper.book().read<String>("test_id", null))
+        reference.addValueEventListener(object: ValueEventListener{
+            override fun onCancelled(error: DatabaseError) {}
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                snapshot.children.forEach {
+                    val test: Test? = it.getValue<Test>()
+                    updateUI(test)
+                }
+            }
+
+            private fun updateUI(test: Test?) {
+                runOnUiThread {
+                    testId.text = test!!.id
+                    testPatientName.text = Paper.book().read<User>("user", null).fullName
+                    testHeight.text = test.height
+                    testWeight.text = test.weight.toString()
+                    testBMI.text = test.bmi.toString()
+                    testBPM.text = test.bpm.toString()
+                    testGlucoseLevel.text = test.glucoseLevel.toString()
+                    testOxygenLevel.text = test.oxygenLevel.toString()
+                    testTemperature.text = test.temperature.toString()
+                    testProblemDetails.text = test.problemDetails
+                    val status = test.status
+                    if (status == "In Queue"){
+                        testStatus.setTextColor(Color.parseColor("#FF0000"))
+                    } else {
+                        testStatus.setTextColor(Color.parseColor("#008000"))
+                    }
+                    testStatus.text = test.status
+                    if (test.checkedBy != null) {
+                        testCheckedBy.text = test.checkedBy
+                    }
+                    testDate.text = test.date
+                }
+            }
+        })
     }
 
     private fun bindWidgets() {
