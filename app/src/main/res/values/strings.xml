@@ -47,6 +47,7 @@
     <string name="account_type">Account Type:</string>
     <string name="profile">Profile</string>
     <string name="edit_profile">Edit Profile</string>
+    <string name="save_user">save user</string>
     <string-array name="account_type">
         <item>Doctor</item>
         <item>Patient</item>
