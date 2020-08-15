@@ -40,6 +40,13 @@
     <string name="in_queue">In Queue</string>
     <string name="test_checked_by">Checked By:</string>
     <string name="test_date">Date:</string>
+    <string name="log_out">Log Out</string>
+    <string name="profile_full_name">Full Name:</string>
+    <string name="user_email">Email:</string>
+    <string name="user_mobile_number">Mobile Number:</string>
+    <string name="account_type">Account Type:</string>
+    <string name="profile">Profile</string>
+    <string name="edit_profile">Edit Profile</string>
     <string-array name="account_type">
         <item>Doctor</item>
         <item>Patient</item>
