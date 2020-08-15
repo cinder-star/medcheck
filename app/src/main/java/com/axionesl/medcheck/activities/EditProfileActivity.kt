@@ -35,9 +35,31 @@ class EditProfileActivity : AppCompatActivity() {
 
     private fun bindListeners() {
         saveUser.setOnClickListener {
-            updateUser()
-            finish()
+            if (validate()) {
+                updateUser()
+                finish()
+            }
         }
+    }
+
+    private fun validate(): Boolean {
+        var result = true
+        val textFields: ArrayList<TextInputEditText> =
+            arrayListOf(name)
+        textFields.forEach { e ->
+            if (e.text.toString().isEmpty()) {
+                e.error = "Field cannot be empty"
+                e.requestFocus()
+                result = false
+            }
+        }
+        val regex = "(01[356789][0-9]{8})".toRegex()
+        val input = mobileNumber.text.toString()
+        if (!regex.matches(input)) {
+            mobileNumber.error = "Invalid Mobile Number!"
+            result = false
+        }
+        return result
     }
 
     private fun updateUser() {
