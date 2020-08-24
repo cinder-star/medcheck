@@ -1,6 +1,8 @@
 package com.axionesl.medcheck.activities
 
+import android.R.id.message
 import android.os.Bundle
+import android.telephony.SmsManager
 import android.widget.Button
 import com.axionesl.medcheck.R
 import com.axionesl.medcheck.domains.Test
@@ -9,6 +11,7 @@ import com.axionesl.medcheck.repository.DatabaseWriter
 import com.axionesl.medcheck.utils.AbstractTestDetailsActivity
 import com.google.android.material.textfield.TextInputEditText
 import io.paperdb.Paper
+
 
 class CreatePrescriptionActivity :
     AbstractTestDetailsActivity(R.layout.activity_create_prescription) {
@@ -33,9 +36,15 @@ class CreatePrescriptionActivity :
                 test.status = "Checked"
                 test.checkedBy = Paper.book().read<User>("user", null).fullName
                 DatabaseWriter.write("/tests/" + test.id, test)
+                val smsManager: SmsManager = SmsManager.getDefault()
+                smsManager.sendTextMessage("+88"+test.mobileNumber, null, createMessage(test), null, null)
                 finish()
             }
         }
+    }
+
+    private fun createMessage(test: Test): String? {
+        return "Your test (id: "+test.id+") has been checked by "+test.checkedBy
     }
 
     private fun validate(): Boolean {
