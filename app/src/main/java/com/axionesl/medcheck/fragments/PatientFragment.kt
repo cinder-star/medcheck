@@ -10,13 +10,16 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.axionesl.medcheck.R
 import com.axionesl.medcheck.activities.AddTestActivity
+import com.axionesl.medcheck.activities.TestDetailsActivity
 import com.axionesl.medcheck.domains.Test
 import com.axionesl.medcheck.utils.PatientAdapter
+import com.axionesl.medcheck.utils.TestClickListener
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import io.paperdb.Paper
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -28,7 +31,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [PatientFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class PatientFragment : Fragment() {
+class PatientFragment : Fragment(), TestClickListener {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -82,7 +85,7 @@ class PatientFragment : Fragment() {
             .setQuery(query, Test::class.java)
             .build()
 
-        val adapter = PatientAdapter(activity!!, options)
+        val adapter = PatientAdapter(activity!!, options, this)
         testList.adapter = adapter
         adapter.startListening()
     }
@@ -105,5 +108,10 @@ class PatientFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    override fun onTestClick(test: Test) {
+        Paper.book().write("test_id", test.id)
+        activity!!.startActivity(Intent(activity, TestDetailsActivity::class.java))
     }
 }

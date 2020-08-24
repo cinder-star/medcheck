@@ -1,7 +1,6 @@
 package com.axionesl.medcheck.utils
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -9,27 +8,25 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.axionesl.medcheck.R
-import com.axionesl.medcheck.activities.TestDetailsActivity
 import com.axionesl.medcheck.domains.Test
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
-import io.paperdb.Paper
 
-class PatientAdapter(private val context: Context, options: FirebaseRecyclerOptions<Test>) :
+class PatientAdapter(private val context: Context, options: FirebaseRecyclerOptions<Test>, private val testClickListener: TestClickListener) :
     FirebaseRecyclerAdapter<Test, PatientAdapter.ViewHolder>(
         options
     ) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.row_test, parent, false)
-        return ViewHolder(context, view)
+        return ViewHolder(view, testClickListener)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int, model: Test) {
         holder.bindView(model)
     }
 
-    class ViewHolder(private val context: Context, itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View, private val testClickListener: TestClickListener) : RecyclerView.ViewHolder(itemView) {
         fun bindView(test: Test) {
             val testId: TextView = itemView.findViewById(R.id.test_id)
             val testStatus: TextView = itemView.findViewById(R.id.test_status)
@@ -49,8 +46,7 @@ class PatientAdapter(private val context: Context, options: FirebaseRecyclerOpti
             }
 
             itemView.setOnClickListener {
-                Paper.book().write("test_id", test.id)
-                context.startActivity(Intent(context, TestDetailsActivity::class.java))
+                testClickListener.onTestClick(test)
             }
         }
     }

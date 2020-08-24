@@ -1,11 +1,22 @@
 package com.axionesl.medcheck.fragments
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.axionesl.medcheck.R
+import com.axionesl.medcheck.activities.TestDetailsActivity
+import com.axionesl.medcheck.domains.Test
+import com.axionesl.medcheck.utils.PatientAdapter
+import com.axionesl.medcheck.utils.TestClickListener
+import com.firebase.ui.database.FirebaseRecyclerOptions
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import io.paperdb.Paper
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -17,10 +28,12 @@ private const val ARG_PARAM2 = "param2"
  * Use the [DoctorFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class DoctorFragment : Fragment() {
+class DoctorFragment : Fragment(), TestClickListener {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+
+    private lateinit var testList: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +48,33 @@ class DoctorFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_doctor, container, false)
+        val view = inflater.inflate(R.layout.fragment_doctor, container, false)
+        bindWidgets(view)
+        updateRecyclerView()
+        return view
+    }
+
+    private fun updateRecyclerView() {
+        testList.layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
+        prepareRecyclerView()
+    }
+
+    private fun bindWidgets(view: View) {
+        testList = view.findViewById(R.id.test_list)
+    }
+
+    private fun prepareRecyclerView() {
+        val ref = Firebase.database.reference.child("/tests/")
+        ref.keepSynced(true)
+        val query =
+            ref.orderByChild("status").equalTo("In Queue")
+        val options = FirebaseRecyclerOptions.Builder<Test>()
+            .setQuery(query, Test::class.java)
+            .build()
+
+        val adapter = PatientAdapter(activity!!, options, this)
+        testList.adapter = adapter
+        adapter.startListening()
     }
 
     companion object {
@@ -56,5 +95,10 @@ class DoctorFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    override fun onTestClick(test: Test) {
+        Paper.book().write("test_id", test.id)
+        activity!!.startActivity(Intent(activity, TestDetailsActivity::class.java))
     }
 }
