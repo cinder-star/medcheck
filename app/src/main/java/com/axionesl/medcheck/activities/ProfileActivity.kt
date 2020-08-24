@@ -24,6 +24,7 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var email: TextView
     private lateinit var accountType: TextView
     private lateinit var mobileNumber: TextView
+    private lateinit var bloodType: TextView
     private lateinit var logOut: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +38,7 @@ class ProfileActivity : AppCompatActivity() {
         email = findViewById(R.id.user_email)
         mobileNumber = findViewById(R.id.user_mobile_number)
         accountType = findViewById(R.id.user_account_type)
+        bloodType = findViewById(R.id.user_blood_type)
         logOut = findViewById(R.id.log_out)
     }
 
@@ -73,6 +75,7 @@ class ProfileActivity : AppCompatActivity() {
         email.text = user.email
         mobileNumber.text = user.mobileNumber
         accountType.text = user.accountType
+        bloodType.text = user.bloodType
     }
 
     private fun <T> changeActivity(jClass: Class<T>) {

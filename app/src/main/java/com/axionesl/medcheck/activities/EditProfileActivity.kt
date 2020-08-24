@@ -1,5 +1,6 @@
 package com.axionesl.medcheck.activities
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +20,7 @@ import io.paperdb.Paper
 class EditProfileActivity : AppCompatActivity() {
     private lateinit var name: TextInputEditText
     private lateinit var mobileNumber: TextInputEditText
+    private lateinit var bloodType: TextInputEditText
     private lateinit var saveUser: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +32,7 @@ class EditProfileActivity : AppCompatActivity() {
     private fun bindWidgets() {
         name = findViewById(R.id.user_full_name)
         mobileNumber = findViewById(R.id.user_mobile_number)
+        bloodType = findViewById(R.id.user_blood_type)
         saveUser = findViewById(R.id.save_user)
     }
 
@@ -66,6 +69,7 @@ class EditProfileActivity : AppCompatActivity() {
         val currentUser: User = Paper.book().read<User>("user", null)
         currentUser.fullName = name.text.toString()
         currentUser.mobileNumber = mobileNumber.text.toString()
+        currentUser.bloodType = bloodType.text.toString()
         Paper.book().write("user", currentUser)
         DatabaseWriter.write("/user/"+currentUser.id, currentUser)
     }
@@ -89,9 +93,15 @@ class EditProfileActivity : AppCompatActivity() {
         })
     }
 
+    @SuppressLint("SetTextI18n")
     private fun updateUI(user: User?) {
         name.setText(user!!.fullName)
         mobileNumber.setText(user.mobileNumber)
+        if (user.bloodType != null) {
+            bloodType.setText(user.bloodType)
+        } else {
+            bloodType.setText("none")
+        }
         Paper.book().write("user", user)
     }
 }

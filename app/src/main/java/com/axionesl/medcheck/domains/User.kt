@@ -5,5 +5,6 @@ data class User(
     val email: String? = null,
     var fullName: String? = null,
     var mobileNumber: String? = null,
-    val accountType: String? = null
+    val accountType: String? = null,
+    var bloodType: String? = null
 )

@@ -24,6 +24,7 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var confirmPassword: TextInputEditText
     private lateinit var fullName: TextInputEditText
     private lateinit var mobileNumber: TextInputEditText
+    private lateinit var bloodType: TextInputEditText
     private lateinit var accountType: AppCompatSpinner
     private lateinit var signUp: Button
     private lateinit var progressBar: ProgressBar
@@ -44,6 +45,7 @@ class SignUpActivity : AppCompatActivity() {
         fullName = findViewById(R.id.full_name)
         accountType = findViewById(R.id.account_type)
         mobileNumber = findViewById(R.id.mobile_number)
+        bloodType = findViewById(R.id.blood_type)
         signUp = findViewById(R.id.sign_up)
         progressBar = findViewById(R.id.progress_bar)
     }
@@ -97,7 +99,8 @@ class SignUpActivity : AppCompatActivity() {
                     email,
                     fullName.text.toString(),
                     mobileNumber.text.toString(),
-                    accountType.selectedItem.toString()
+                    accountType.selectedItem.toString(),
+                    bloodType.text.toString()
                 )
                 Paper.book().write("account_type", user.accountType)
                 DatabaseWriter.write("/user/" + auth.currentUser!!.uid, user)
