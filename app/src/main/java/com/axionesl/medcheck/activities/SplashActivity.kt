@@ -15,11 +15,7 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
         if (checkUser()) {
             val user: User = Paper.book().read<User>("user", null)
-            if (user.accountType == "Patient") {
-                changeActivity(PatientActivity::class.java)
-            } else {
-                changeActivity(MainActivity::class.java)
-            }
+            changeActivity(MainActivity::class.java)
         } else {
             changeActivity(LoginActivity::class.java)
         }

@@ -17,6 +17,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
+import io.paperdb.Paper
 
 class ProfileActivity : AppCompatActivity() {
     private lateinit var name: TextView
@@ -42,6 +43,7 @@ class ProfileActivity : AppCompatActivity() {
     private fun bindListeners() {
         logOut.setOnClickListener {
             Firebase.auth.signOut()
+            Paper.book().write("user", "")
             changeActivity(LoginActivity::class.java)
         }
     }

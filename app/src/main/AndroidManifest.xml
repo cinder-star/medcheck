@@ -18,7 +18,7 @@
         <activity android:name=".activities.ProfileActivity" />
         <activity android:name=".activities.TestDetailsActivity" />
         <activity android:name=".activities.AddTestActivity" />
-        <activity android:name=".activities.PatientActivity" />
+        <activity android:name=".activities.MainActivity" />
         <activity android:name=".activities.LoginActivity" />
         <activity android:name=".activities.SignUpActivity" />
         <activity android:name=".activities.SplashActivity">

@@ -101,11 +101,7 @@ class SignUpActivity : AppCompatActivity() {
                 )
                 Paper.book().write("account_type", user.accountType)
                 DatabaseWriter.write("/user/" + auth.currentUser!!.uid, user)
-                if (user.accountType == "Patient") {
-                    changeActivity(PatientActivity::class.java)
-                } else {
-                    changeActivity(MainActivity::class.java)
-                }
+                changeActivity(MainActivity::class.java)
             }
             .addOnFailureListener {
                 progressBar.visibility = View.GONE

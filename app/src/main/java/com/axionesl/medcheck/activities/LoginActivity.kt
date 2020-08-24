@@ -94,11 +94,7 @@ class LoginActivity : AppCompatActivity() {
                     if (user!!.id == Firebase.auth.currentUser!!.uid) {
                         Paper.book().write("user", user)
                         progressBar.visibility = View.GONE
-                        if (user.accountType == "Patient") {
-                            changeActivity(PatientActivity::class.java)
-                        } else {
-                            changeActivity(MainActivity::class.java)
-                        }
+                        changeActivity(MainActivity::class.java)
                     }
                 }
             }
