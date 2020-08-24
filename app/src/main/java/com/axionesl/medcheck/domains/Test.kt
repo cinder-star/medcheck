@@ -15,5 +15,6 @@ data class Test(
     var checkedBy: String? = null,
     var patient: String? = null,
     var date: String? = null,
-    var prescription: String? = null
+    var prescription: String? = null,
+    var mobileNumber: String? = null
 )

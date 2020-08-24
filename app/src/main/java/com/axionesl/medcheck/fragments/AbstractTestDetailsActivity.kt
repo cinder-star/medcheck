@@ -52,32 +52,6 @@ abstract class AbstractTestDetailsActivity(private val xmlId: Int) : AppCompatAc
                     updateUI(test)
                 }
             }
-
-            private fun updateUI(test: Test?) {
-                runOnUiThread {
-                    testId.text = test!!.id
-                    testPatientName.text = Paper.book().read<User>("user", null).fullName
-                    testHeight.text = test.height
-                    testWeight.text = test.weight.toString()
-                    testBMI.text = test.bmi.toString()
-                    testBPM.text = test.bpm.toString()
-                    testGlucoseLevel.text = test.glucoseLevel.toString()
-                    testOxygenLevel.text = test.oxygenLevel.toString()
-                    testTemperature.text = test.temperature.toString()
-                    testProblemDetails.text = test.problemDetails
-                    val status = test.status
-                    if (status == "In Queue"){
-                        testStatus.setTextColor(Color.parseColor("#FF0000"))
-                    } else {
-                        testStatus.setTextColor(Color.parseColor("#008000"))
-                    }
-                    testStatus.text = test.status
-                    if (test.checkedBy != null) {
-                        testCheckedBy.text = test.checkedBy
-                    }
-                    testDate.text = test.date
-                }
-            }
         })
     }
 
@@ -95,6 +69,32 @@ abstract class AbstractTestDetailsActivity(private val xmlId: Int) : AppCompatAc
         testStatus = findViewById(R.id.test_status)
         testCheckedBy = findViewById(R.id.test_checked_by)
         testDate = findViewById(R.id.test_date)
+    }
+
+    open fun updateUI(test: Test?) {
+        runOnUiThread {
+            testId.text = test!!.id
+            testPatientName.text = Paper.book().read<User>("user", null).fullName
+            testHeight.text = test.height
+            testWeight.text = test.weight.toString()
+            testBMI.text = test.bmi.toString()
+            testBPM.text = test.bpm.toString()
+            testGlucoseLevel.text = test.glucoseLevel.toString()
+            testOxygenLevel.text = test.oxygenLevel.toString()
+            testTemperature.text = test.temperature.toString()
+            testProblemDetails.text = test.problemDetails
+            val status = test.status
+            if (status == "In Queue"){
+                testStatus.setTextColor(Color.parseColor("#FF0000"))
+            } else {
+                testStatus.setTextColor(Color.parseColor("#008000"))
+            }
+            testStatus.text = test.status
+            if (test.checkedBy != null) {
+                testCheckedBy.text = test.checkedBy
+            }
+            testDate.text = test.date
+        }
     }
 
     abstract fun bindListeners()

@@ -10,11 +10,13 @@ import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
 import com.axionesl.medcheck.R
 import com.axionesl.medcheck.domains.Test
+import com.axionesl.medcheck.domains.User
 import com.axionesl.medcheck.repository.DatabaseWriter
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import io.paperdb.Paper
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -86,6 +88,7 @@ class AddTestActivity : AppCompatActivity() {
         val id = SimpleDateFormat("yyyyMMddHHmmss").format(Date())
         val date = SimpleDateFormat("dd-MM-yyyy").format(Date())
         val patient: String? = Firebase.auth.currentUser!!.uid
+        val mobileNumber: String? = Paper.book().read<User>("user").mobileNumber
         var details: String? = null
         if (problemDetails.text.toString().isNotEmpty()) {
             details = problemDetails.text.toString()
@@ -104,7 +107,8 @@ class AddTestActivity : AppCompatActivity() {
             "In Queue",
             null,
             patient,
-            date
+            date,
+            mobileNumber
         )
     }
 
