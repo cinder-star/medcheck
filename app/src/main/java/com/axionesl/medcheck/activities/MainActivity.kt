@@ -31,15 +31,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkPermissions() {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.SEND_SMS)
-            != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.SEND_SMS)) {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.SEND_SMS
+            )
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    this,
+                    Manifest.permission.SEND_SMS
+                )
+            ) {
             } else {
-                ActivityCompat.requestPermissions(this,
+                ActivityCompat.requestPermissions(
+                    this,
                     arrayOf(Manifest.permission.SEND_SMS),
-                    MY_PERMISSIONS_REQUEST_SEND_SMS)
+                    MY_PERMISSIONS_REQUEST_SEND_SMS
+                )
             }
         }
     }
