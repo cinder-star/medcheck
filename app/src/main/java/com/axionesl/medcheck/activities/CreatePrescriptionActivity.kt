@@ -5,7 +5,7 @@ import android.widget.Button
 import com.axionesl.medcheck.R
 import com.axionesl.medcheck.domains.Test
 import com.axionesl.medcheck.domains.User
-import com.axionesl.medcheck.fragments.AbstractTestDetailsActivity
+import com.axionesl.medcheck.utils.AbstractTestDetailsActivity
 import com.axionesl.medcheck.repository.DatabaseWriter
 import com.google.android.material.textfield.TextInputEditText
 import io.paperdb.Paper

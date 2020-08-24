@@ -1,4 +1,4 @@
-package com.axionesl.medcheck.fragments
+package com.axionesl.medcheck.utils
 
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
