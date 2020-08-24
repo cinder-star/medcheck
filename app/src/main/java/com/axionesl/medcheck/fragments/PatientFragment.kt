@@ -111,7 +111,7 @@ class PatientFragment : Fragment(), TestClickListener {
     }
 
     override fun onTestClick(test: Test) {
-        Paper.book().write("test_id", test.id)
+        Paper.book().write("test", test)
         activity!!.startActivity(Intent(activity, TestDetailsActivity::class.java))
     }
 }

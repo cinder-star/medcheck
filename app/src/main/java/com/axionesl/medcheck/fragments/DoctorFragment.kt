@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.axionesl.medcheck.R
+import com.axionesl.medcheck.activities.CreatePrescriptionActivity
 import com.axionesl.medcheck.activities.TestDetailsActivity
 import com.axionesl.medcheck.domains.Test
 import com.axionesl.medcheck.utils.PatientAdapter
@@ -98,7 +99,7 @@ class DoctorFragment : Fragment(), TestClickListener {
     }
 
     override fun onTestClick(test: Test) {
-        Paper.book().write("test_id", test.id)
-        activity!!.startActivity(Intent(activity, TestDetailsActivity::class.java))
+        Paper.book().write("test", test)
+        activity!!.startActivity(Intent(activity, CreatePrescriptionActivity::class.java))
     }
 }

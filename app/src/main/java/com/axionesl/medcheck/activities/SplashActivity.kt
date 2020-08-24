@@ -14,7 +14,6 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
         if (checkUser()) {
-            val user: User = Paper.book().read<User>("user", null)
             changeActivity(MainActivity::class.java)
         } else {
             changeActivity(LoginActivity::class.java)

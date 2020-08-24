@@ -14,5 +14,6 @@ data class Test(
     var status: String? = "In Queue",
     var checkedBy: String? = null,
     var patient: String? = null,
-    var date: String? = null
+    var date: String? = null,
+    var prescription: String? = null
 )
