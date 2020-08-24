@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadView() {
         val user = Paper.book().read<User>("user", null)
-        if (user.accountType == "Patient"){
+        if (user.accountType == "Patient") {
             loadFragment(PatientFragment())
         } else {
             loadFragment(DoctorFragment())
@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId) {
+        return when (item.itemId) {
             R.id.profile -> {
                 startActivity(Intent(this, ProfileActivity::class.java))
                 true

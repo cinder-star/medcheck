@@ -4,6 +4,6 @@
     <item
         android:id="@+id/profile"
         android:icon="@drawable/ic_user"
-        app:showAsAction="ifRoom"
-        android:title="@string/profile" />
+        android:title="@string/profile"
+        app:showAsAction="ifRoom" />
 </menu>

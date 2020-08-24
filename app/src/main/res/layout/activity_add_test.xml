@@ -188,10 +188,10 @@
             android:id="@+id/problem_details"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:lines="8"
-            android:minLines="6"
             android:gravity="top|start"
-            android:inputType="textMultiLine" />
+            android:inputType="textMultiLine"
+            android:lines="8"
+            android:minLines="6" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

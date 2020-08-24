@@ -29,6 +29,7 @@ class EditProfileActivity : AppCompatActivity() {
         bindListeners()
         updateData()
     }
+
     private fun bindWidgets() {
         name = findViewById(R.id.user_full_name)
         mobileNumber = findViewById(R.id.user_mobile_number)
@@ -71,7 +72,7 @@ class EditProfileActivity : AppCompatActivity() {
         currentUser.mobileNumber = mobileNumber.text.toString()
         currentUser.bloodType = bloodType.text.toString()
         Paper.book().write("user", currentUser)
-        DatabaseWriter.write("/user/"+currentUser.id, currentUser)
+        DatabaseWriter.write("/user/" + currentUser.id, currentUser)
     }
 
     private fun updateData() {
@@ -82,7 +83,7 @@ class EditProfileActivity : AppCompatActivity() {
             .orderByChild("id")
             .equalTo(Firebase.auth.currentUser!!.uid)
         reference.keepSynced(true)
-        reference.addListenerForSingleValueEvent(object: ValueEventListener {
+        reference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {}
             override fun onDataChange(snapshot: DataSnapshot) {
                 snapshot.children.forEach {

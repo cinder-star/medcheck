@@ -12,7 +12,11 @@ import com.axionesl.medcheck.domains.Test
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 
-class PatientAdapter(private val context: Context, options: FirebaseRecyclerOptions<Test>, private val testClickListener: TestClickListener) :
+class PatientAdapter(
+    private val context: Context,
+    options: FirebaseRecyclerOptions<Test>,
+    private val testClickListener: TestClickListener
+) :
     FirebaseRecyclerAdapter<Test, PatientAdapter.ViewHolder>(
         options
     ) {
@@ -26,7 +30,8 @@ class PatientAdapter(private val context: Context, options: FirebaseRecyclerOpti
         holder.bindView(model)
     }
 
-    class ViewHolder(itemView: View, private val testClickListener: TestClickListener) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View, private val testClickListener: TestClickListener) :
+        RecyclerView.ViewHolder(itemView) {
         fun bindView(test: Test) {
             val testId: TextView = itemView.findViewById(R.id.test_id)
             val testStatus: TextView = itemView.findViewById(R.id.test_status)

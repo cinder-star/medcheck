@@ -4,10 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.axionesl.medcheck.R
-import com.axionesl.medcheck.domains.User
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import io.paperdb.Paper
 
 class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,13 +1,13 @@
 package com.axionesl.medcheck.activities
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.axionesl.medcheck.R
 import com.axionesl.medcheck.domains.User
 import com.google.firebase.auth.ktx.auth
@@ -59,7 +59,7 @@ class ProfileActivity : AppCompatActivity() {
             .orderByChild("id")
             .equalTo(Firebase.auth.currentUser!!.uid)
         reference.keepSynced(true)
-        reference.addValueEventListener(object: ValueEventListener{
+        reference.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {}
             override fun onDataChange(snapshot: DataSnapshot) {
                 snapshot.children.forEach {

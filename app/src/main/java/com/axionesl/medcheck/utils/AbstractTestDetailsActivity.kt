@@ -1,9 +1,9 @@
 package com.axionesl.medcheck.utils
 
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.axionesl.medcheck.R
 import com.axionesl.medcheck.domains.Test
 import com.axionesl.medcheck.domains.User
@@ -43,7 +43,7 @@ abstract class AbstractTestDetailsActivity(private val xmlId: Int) : AppCompatAc
             .child("/tests/")
             .orderByChild("id")
             .equalTo(Paper.book().read<Test>("test", null).id)
-        reference.addValueEventListener(object: ValueEventListener{
+        reference.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {}
 
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -84,7 +84,7 @@ abstract class AbstractTestDetailsActivity(private val xmlId: Int) : AppCompatAc
             testTemperature.text = test.temperature.toString()
             testProblemDetails.text = test.problemDetails
             val status = test.status
-            if (status == "In Queue"){
+            if (status == "In Queue") {
                 testStatus.setTextColor(Color.parseColor("#FF0000"))
             } else {
                 testStatus.setTextColor(Color.parseColor("#008000"))
