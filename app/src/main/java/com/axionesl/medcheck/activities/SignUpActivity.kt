@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -40,7 +39,7 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var profilePictureAdd: FloatingActionButton
     private val auth = Firebase.auth
     private lateinit var uri: Uri
-    private val PICK_FILE_REQUEST = 120
+    private val fileRequest = 120
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,13 +74,13 @@ class SignUpActivity : AppCompatActivity() {
         profilePictureAdd.setOnClickListener {
             val i = Intent(this, FileChooser::class.java)
             i.putExtra(Constants.SELECTION_MODE, Constants.SELECTION_MODES.SINGLE_SELECTION.ordinal)
-            startActivityForResult(i, PICK_FILE_REQUEST)
+            startActivityForResult(i, fileRequest)
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == PICK_FILE_REQUEST && data != null) {
+        if (requestCode == fileRequest && data != null) {
             if (resultCode == Activity.RESULT_OK) {
                 uri = data.data!!
                 profilePicture.setImageURI(uri)
