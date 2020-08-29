@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">MedCheck</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
@@ -58,4 +58,7 @@
     <string name="user_blood_type">Blood Type:</string>
     <string name="prescription">Prescription</string>
     <string name="create_prescription">Create Prescription</string>
+    <string name="title_choose_file">Choose Image</string>
+    <string name="title_choose" tools:override="true">Choose</string>
+    <string name="dialog_cancel" tools:override="true">Cancel</string>
 </resources>

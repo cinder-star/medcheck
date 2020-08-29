@@ -15,7 +15,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="AllowBackup">
+        tools:ignore="AllowBackup"
+        android:requestLegacyExternalStorage="true"
+        tools:targetApi="q">
         <activity android:name=".activities.CreatePrescriptionActivity" />
         <activity android:name=".activities.EditProfileActivity" />
         <activity android:name=".activities.ProfileActivity" />

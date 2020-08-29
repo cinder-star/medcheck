@@ -1,22 +1,30 @@
 package com.axionesl.medcheck.activities
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatSpinner
+import com.aditya.filebrowser.Constants
+import com.aditya.filebrowser.FileChooser
 import com.axionesl.medcheck.R
 import com.axionesl.medcheck.domains.User
 import com.axionesl.medcheck.repository.DatabaseWriter
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import io.paperdb.Paper
+
 
 class SignUpActivity : AppCompatActivity() {
     private lateinit var email: TextInputEditText
@@ -28,7 +36,11 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var accountType: AppCompatSpinner
     private lateinit var signUp: Button
     private lateinit var progressBar: ProgressBar
+    private lateinit var profilePicture: ImageView
+    private lateinit var profilePictureAdd: FloatingActionButton
     private val auth = Firebase.auth
+    private lateinit var uri: Uri
+    private val PICK_FILE_REQUEST = 120
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,6 +60,8 @@ class SignUpActivity : AppCompatActivity() {
         bloodType = findViewById(R.id.blood_type)
         signUp = findViewById(R.id.sign_up)
         progressBar = findViewById(R.id.progress_bar)
+        profilePicture = findViewById(R.id.profile_picture)
+        profilePictureAdd = findViewById(R.id.add_profile_picture)
     }
 
     private fun bindListeners() {
@@ -56,6 +70,21 @@ class SignUpActivity : AppCompatActivity() {
             if (validate()) {
                 progressBar.visibility = View.VISIBLE
                 makeUser(email.text.toString(), password.text.toString())
+            }
+        }
+        profilePictureAdd.setOnClickListener {
+            val i = Intent(this, FileChooser::class.java)
+            i.putExtra(Constants.SELECTION_MODE, Constants.SELECTION_MODES.SINGLE_SELECTION.ordinal)
+            startActivityForResult(i, PICK_FILE_REQUEST)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == PICK_FILE_REQUEST && data != null) {
+            if (resultCode == Activity.RESULT_OK) {
+                uri = data.data!!
+                profilePicture.setImageURI(uri)
             }
         }
     }
