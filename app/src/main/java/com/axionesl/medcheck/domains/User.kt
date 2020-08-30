@@ -6,5 +6,7 @@ data class User(
     var fullName: String? = null,
     var mobileNumber: String? = null,
     val accountType: String? = null,
-    var bloodType: String? = null
+    var bloodType: String? = null,
+    var dateOfBirth: String? = null,
+    var profilePicturePath: String? = null
 )

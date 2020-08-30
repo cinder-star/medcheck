@@ -1,10 +1,15 @@
 package com.axionesl.medcheck.activities
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -18,11 +23,14 @@ import com.aditya.filebrowser.FileChooser
 import com.axionesl.medcheck.R
 import com.axionesl.medcheck.domains.User
 import com.axionesl.medcheck.repository.DatabaseWriter
+import com.axionesl.medcheck.repository.StorageWriter
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import io.paperdb.Paper
+import java.io.ByteArrayOutputStream
 
 
 class SignUpActivity : AppCompatActivity() {
@@ -38,7 +46,7 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var profilePicture: ImageView
     private lateinit var profilePictureAdd: FloatingActionButton
     private val auth = Firebase.auth
-    private lateinit var uri: Uri
+    private var uri: Uri? = null
     private val fileRequest = 120
 
 
@@ -115,29 +123,55 @@ class SignUpActivity : AppCompatActivity() {
             mobileNumber.error = "Invalid Mobile Number!"
             result = false
         }
+        if (uri == null) {
+            Toast.makeText(this, "No Profile picture chosen", Toast.LENGTH_LONG).show()
+            result = false
+        }
         return result
     }
 
+    @SuppressLint("SimpleDateFormat")
     private fun makeUser(email: String, password: String) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnSuccessListener {
                 progressBar.visibility = View.GONE
+                val id = Firebase.auth.currentUser!!.uid
                 val user = User(
                     auth.currentUser!!.uid,
                     email,
                     fullName.text.toString(),
                     mobileNumber.text.toString(),
                     accountType.selectedItem.toString(),
-                    bloodType.text.toString()
+                    bloodType.text.toString(),
+                    profilePicturePath = "$id.jpg"
                 )
-                Paper.book().write("account_type", user.accountType)
-                DatabaseWriter.write("/user/" + auth.currentUser!!.uid, user)
-                changeActivity(MainActivity::class.java)
+                Paper.book().write("user", user)
+                DatabaseWriter.write("/user/$id", user)
+                StorageWriter.upload(
+                    "/user/$id.jpg", getByteData(),
+                    OnSuccessListener { changeActivity(MainActivity::class.java) },
+                    null
+                )
             }
             .addOnFailureListener {
                 progressBar.visibility = View.GONE
                 Toast.makeText(this, "Sign Up failed", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    private fun getByteData(): ByteArray {
+        @Suppress("DEPRECATION") var bitmap = if (Build.VERSION.SDK_INT >= 29) {
+            ImageDecoder.decodeBitmap(ImageDecoder.createSource(this.contentResolver, uri!!))
+        } else {
+            MediaStore.Images.Media.getBitmap(this.contentResolver, uri)
+        }
+        val byteOutputStream = ByteArrayOutputStream()
+        bitmap = Bitmap.createScaledBitmap(
+            bitmap, 1024,
+            ((bitmap.height * (1024.0 / bitmap.width)).toInt()), true
+        )
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteOutputStream)
+        return byteOutputStream.toByteArray()
     }
 
     private fun <T> changeActivity(jClass: Class<T>) {
