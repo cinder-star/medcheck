@@ -9,7 +9,13 @@ import com.google.firebase.storage.ktx.storage
 class StorageWriter {
     companion object {
         fun upload(path: String, data: ByteArray, onSuccessListener: OnSuccessListener<UploadTask.TaskSnapshot>?, onFailureListener: OnFailureListener?) {
-            Firebase.storage.reference.child(path).putBytes(data)
+            val task = Firebase.storage.reference.child(path).putBytes(data)
+            if (onSuccessListener != null) {
+                task.addOnSuccessListener(onSuccessListener)
+            }
+            if (onFailureListener != null) {
+                task.addOnFailureListener(onFailureListener)
+            }
         }
     }
 }

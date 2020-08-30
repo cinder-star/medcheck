@@ -136,15 +136,7 @@ class SignUpActivity : AppCompatActivity() {
             .addOnSuccessListener {
                 progressBar.visibility = View.GONE
                 val id = Firebase.auth.currentUser!!.uid
-                val user = User(
-                    auth.currentUser!!.uid,
-                    email,
-                    fullName.text.toString(),
-                    mobileNumber.text.toString(),
-                    accountType.selectedItem.toString(),
-                    bloodType.text.toString(),
-                    profilePicturePath = "$id.jpg"
-                )
+                val user = prepareUserData(id, email)
                 Paper.book().write("user", user)
                 DatabaseWriter.write("/user/$id", user)
                 StorageWriter.upload(
@@ -157,6 +149,18 @@ class SignUpActivity : AppCompatActivity() {
                 progressBar.visibility = View.GONE
                 Toast.makeText(this, "Sign Up failed", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    private fun prepareUserData(id: String, email: String): User {
+        return User(
+            auth.currentUser!!.uid,
+            email,
+            fullName.text.toString(),
+            mobileNumber.text.toString(),
+            accountType.selectedItem.toString(),
+            bloodType.text.toString(),
+            profilePicturePath = "$id.jpg"
+        )
     }
 
     private fun getByteData(): ByteArray {
