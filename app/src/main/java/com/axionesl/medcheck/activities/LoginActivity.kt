@@ -28,6 +28,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var logIn: Button
     private lateinit var progressBar: ProgressBar
     private lateinit var signUpRedirect: TextView
+    private lateinit var forgotPassword: TextView
     private val auth = Firebase.auth
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,6 +44,7 @@ class LoginActivity : AppCompatActivity() {
         logIn = findViewById(R.id.log_in)
         progressBar = findViewById(R.id.progress_bar)
         signUpRedirect = findViewById(R.id.redirect)
+        forgotPassword = findViewById(R.id.forgot_password)
     }
 
     private fun bindListeners() {
@@ -55,6 +57,9 @@ class LoginActivity : AppCompatActivity() {
         }
         signUpRedirect.setOnClickListener {
             startActivity(Intent(this, SignUpActivity::class.java))
+        }
+        forgotPassword.setOnClickListener {
+            startActivity(Intent(this, ResetPasswordActivity::class.java))
         }
     }
 

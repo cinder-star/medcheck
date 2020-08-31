@@ -70,6 +70,13 @@
             android:textSize="14sp" />
 
     </LinearLayout>
+    <TextView
+        android:id="@+id/forgot_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/forgot_password"
+        android:textColor="@color/blue"
+        android:textSize="14sp" />
 
     <ProgressBar
         android:id="@+id/progress_bar"

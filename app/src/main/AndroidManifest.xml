@@ -19,7 +19,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup"
         tools:targetApi="q">
-
+        <activity android:name=".activities.ResetPasswordActivity"></activity>
         <activity android:name=".activities.CreatePrescriptionActivity" />
         <activity android:name=".activities.EditProfileActivity" />
         <activity android:name=".activities.ProfileActivity" />

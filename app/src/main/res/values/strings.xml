@@ -61,4 +61,6 @@
     <string name="title_choose_file">Choose Image</string>
     <string name="title_choose" tools:override="true">Choose</string>
     <string name="dialog_cancel" tools:override="true">Cancel</string>
+    <string name="send_password_recovery_mail">Send Password Recovery mail</string>
+    <string name="forgot_password">Forgot Password?</string>
 </resources>
