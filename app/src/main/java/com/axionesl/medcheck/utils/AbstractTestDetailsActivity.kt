@@ -29,6 +29,7 @@ abstract class AbstractTestDetailsActivity(private val xmlId: Int) : AppCompatAc
     private lateinit var testStatus: TextView
     private lateinit var testCheckedBy: TextView
     private lateinit var testDate: TextView
+    private lateinit var testWeightStatus: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(xmlId)
@@ -69,6 +70,7 @@ abstract class AbstractTestDetailsActivity(private val xmlId: Int) : AppCompatAc
         testStatus = findViewById(R.id.test_status)
         testCheckedBy = findViewById(R.id.test_checked_by)
         testDate = findViewById(R.id.test_date)
+        testWeightStatus = findViewById(R.id.test_weight_status)
     }
 
     open fun updateUI(test: Test?) {
@@ -94,7 +96,19 @@ abstract class AbstractTestDetailsActivity(private val xmlId: Int) : AppCompatAc
                 testCheckedBy.text = test.checkedBy
             }
             testDate.text = test.date
+            testWeightStatus.text = getWeightStatus(test.bmi)
         }
+    }
+
+    private fun getWeightStatus(bmi: Double?): CharSequence? {
+        if (bmi!!<18.5) {
+            return "underweight"
+        } else if (bmi >=18.5 && bmi < 25.0) {
+            return "normal"
+        } else if (bmi >= 25.0 && bmi < 30.0) {
+            return "overweight"
+        }
+        return "obese"
     }
 
     abstract fun bindListeners()

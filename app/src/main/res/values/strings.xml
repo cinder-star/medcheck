@@ -63,4 +63,7 @@
     <string name="dialog_cancel" tools:override="true">Cancel</string>
     <string name="send_password_recovery_mail">Send Password Recovery mail</string>
     <string name="forgot_password">Forgot Password?</string>
+    <string name="weight_status">Weight Status:</string>
+    <string name="birthday">Birthday:</string>
+    <string name="text_none">None</string>
 </resources>
