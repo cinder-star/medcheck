@@ -7,6 +7,13 @@
     android:orientation="vertical"
     tools:context=".activities.ProfileActivity">
 
+    <ImageView
+        android:id="@+id/profile_picture"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:src="@drawable/ic_user_black"
+        tools:ignore="ContentDescription" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
