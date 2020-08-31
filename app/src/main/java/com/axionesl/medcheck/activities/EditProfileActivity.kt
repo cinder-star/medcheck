@@ -2,6 +2,7 @@ package com.axionesl.medcheck.activities
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
@@ -10,9 +11,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.ProgressBar
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.aditya.filebrowser.Constants
 import com.aditya.filebrowser.FileChooser
@@ -46,6 +45,8 @@ class EditProfileActivity : AppCompatActivity() {
     private lateinit var profilePicture: ImageView
     private lateinit var profilePictureAdd: FloatingActionButton
     private lateinit var progressBar: ProgressBar
+    private lateinit var birthday: TextView
+    private lateinit var chooseDate: ImageButton
     private var uri: Uri? = null
     private val fileRequest = 120
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,6 +65,8 @@ class EditProfileActivity : AppCompatActivity() {
         profilePicture = findViewById(R.id.profile_picture)
         profilePictureAdd = findViewById(R.id.add_profile_picture)
         progressBar = findViewById(R.id.progress_bar)
+        birthday = findViewById(R.id.birthday)
+        chooseDate = findViewById(R.id.choose_date)
     }
 
     private fun bindListeners() {
@@ -78,6 +81,28 @@ class EditProfileActivity : AppCompatActivity() {
             i.putExtra(Constants.SELECTION_MODE, Constants.SELECTION_MODES.SINGLE_SELECTION.ordinal)
             startActivityForResult(i, fileRequest)
         }
+        chooseDate.setOnClickListener {
+            val currentDate = Calendar.getInstance()
+            val mYear = currentDate[Calendar.YEAR]
+            val mMonth = currentDate[Calendar.MONTH]
+            val mDay = currentDate[Calendar.DAY_OF_MONTH]
+            startChooserDialogue(mDay, mMonth, mYear)
+        }
+    }
+
+    private fun startChooserDialogue(mDay: Int, mMonth: Int, mYear: Int) {
+        val mDatePicker = DatePickerDialog(this,
+            { _, selectedYear, selectedMonth, selectedDay ->
+                val myCalendar = Calendar.getInstance()
+                myCalendar[Calendar.YEAR] = selectedYear
+                myCalendar[Calendar.MONTH] = selectedMonth
+                myCalendar[Calendar.DAY_OF_MONTH] = selectedDay
+                val myFormat = "dd/MM/yy" //Change as you need
+                val sdf = SimpleDateFormat(myFormat, Locale.US)
+                birthday.text = sdf.format(myCalendar.time)
+            }, mYear, mMonth, mDay)
+        mDatePicker.setTitle("Select date")
+        mDatePicker.show()
     }
 
     private fun validate(): Boolean {
@@ -120,6 +145,7 @@ class EditProfileActivity : AppCompatActivity() {
             @Suppress("SpellCheckingInspection")
             val time = SimpleDateFormat("yyyyMMddHHmmss").format(Date())
             currentUser.lastUpdated = time
+            currentUser.profilePicturePath = currentUser.id+".jpg"
             StorageWriter.upload(
                 "/user/" + currentUser.id + ".jpg", getByteData(uri!!),
                 OnSuccessListener {
@@ -167,13 +193,15 @@ class EditProfileActivity : AppCompatActivity() {
             bloodType.setText("none")
         }
         Paper.book().write("user", user)
-        val photoRef =
-            Firebase.storage.reference.child("/user/" + Firebase.auth.currentUser!!.uid + ".jpg")
-        GlideApp
-            .with(this)
-            .load(photoRef)
-            .signature(ObjectKey(user.profilePicturePath+user.lastUpdated))
-            .into(profilePicture)
+        if (user.profilePicturePath != null) {
+            val photoRef =
+                Firebase.storage.reference.child("/user/" + user.profilePicturePath)
+            GlideApp
+                .with(this)
+                .load(photoRef)
+                .signature(ObjectKey(user.profilePicturePath + user.lastUpdated))
+                .into(profilePicture)
+        }
     }
 
     private fun getByteData(uri: Uri): ByteArray {

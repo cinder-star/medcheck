@@ -2,6 +2,7 @@ package com.axionesl.medcheck.activities
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -12,10 +13,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatSpinner
 import com.aditya.filebrowser.Constants
@@ -33,7 +31,6 @@ import io.paperdb.Paper
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class SignUpActivity : AppCompatActivity() {
@@ -48,6 +45,8 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var progressBar: ProgressBar
     private lateinit var profilePicture: ImageView
     private lateinit var profilePictureAdd: FloatingActionButton
+    private lateinit var birthday: TextView
+    private lateinit var chooseDate: ImageButton
     private val auth = Firebase.auth
     private var uri: Uri? = null
     private val fileRequest = 120
@@ -72,6 +71,8 @@ class SignUpActivity : AppCompatActivity() {
         progressBar = findViewById(R.id.progress_bar)
         profilePicture = findViewById(R.id.profile_picture)
         profilePictureAdd = findViewById(R.id.add_profile_picture)
+        birthday = findViewById(R.id.birthday)
+        chooseDate = findViewById(R.id.choose_date)
     }
 
     private fun bindListeners() {
@@ -87,6 +88,28 @@ class SignUpActivity : AppCompatActivity() {
             i.putExtra(Constants.SELECTION_MODE, Constants.SELECTION_MODES.SINGLE_SELECTION.ordinal)
             startActivityForResult(i, fileRequest)
         }
+        chooseDate.setOnClickListener {
+            val currentDate = Calendar.getInstance()
+            val mYear = currentDate[Calendar.YEAR]
+            val mMonth = currentDate[Calendar.MONTH]
+            val mDay = currentDate[Calendar.DAY_OF_MONTH]
+            startChooserDialogue(mDay, mMonth, mYear)
+        }
+    }
+
+    private fun startChooserDialogue(mDay: Int, mMonth: Int, mYear: Int) {
+        val mDatePicker = DatePickerDialog(this,
+            { _, selectedYear, selectedMonth, selectedDay ->
+                val myCalendar = Calendar.getInstance()
+                myCalendar[Calendar.YEAR] = selectedYear
+                myCalendar[Calendar.MONTH] = selectedMonth
+                myCalendar[Calendar.DAY_OF_MONTH] = selectedDay
+                val myFormat = "dd/MM/yy" //Change as you need
+                val sdf = SimpleDateFormat(myFormat, Locale.US)
+                birthday.text = sdf.format(myCalendar.time)
+            }, mYear, mMonth, mDay)
+        mDatePicker.setTitle("Select date")
+        mDatePicker.show()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
