@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.axionesl.medcheck.R
 import com.axionesl.medcheck.domains.User
 import com.axionesl.medcheck.utils.GlideApp
+import com.bumptech.glide.signature.ObjectKey
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -86,6 +87,7 @@ class ProfileActivity : AppCompatActivity() {
             GlideApp
                 .with(this)
                 .load(picRef)
+                .signature(ObjectKey(user.profilePicturePath+user.lastUpdated))
                 .into(profilePicture)
         }
     }

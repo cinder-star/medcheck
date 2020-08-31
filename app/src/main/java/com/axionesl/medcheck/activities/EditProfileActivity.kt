@@ -1,12 +1,29 @@
 package com.axionesl.medcheck.activities
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
+import android.view.View
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
+import com.aditya.filebrowser.Constants
+import com.aditya.filebrowser.FileChooser
 import com.axionesl.medcheck.R
 import com.axionesl.medcheck.domains.User
 import com.axionesl.medcheck.repository.DatabaseWriter
+import com.axionesl.medcheck.repository.StorageWriter
+import com.axionesl.medcheck.utils.GlideApp
+import com.bumptech.glide.signature.ObjectKey
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
@@ -15,13 +32,22 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import io.paperdb.Paper
+import java.io.ByteArrayOutputStream
+import java.text.SimpleDateFormat
+import java.util.*
 
 class EditProfileActivity : AppCompatActivity() {
     private lateinit var name: TextInputEditText
     private lateinit var mobileNumber: TextInputEditText
     private lateinit var bloodType: TextInputEditText
     private lateinit var saveUser: Button
+    private lateinit var profilePicture: ImageView
+    private lateinit var profilePictureAdd: FloatingActionButton
+    private lateinit var progressBar: ProgressBar
+    private var uri: Uri? = null
+    private val fileRequest = 120
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_profile)
@@ -35,14 +61,22 @@ class EditProfileActivity : AppCompatActivity() {
         mobileNumber = findViewById(R.id.user_mobile_number)
         bloodType = findViewById(R.id.user_blood_type)
         saveUser = findViewById(R.id.save_user)
+        profilePicture = findViewById(R.id.profile_picture)
+        profilePictureAdd = findViewById(R.id.add_profile_picture)
+        progressBar = findViewById(R.id.progress_bar)
     }
 
     private fun bindListeners() {
         saveUser.setOnClickListener {
             if (validate()) {
+                progressBar.visibility = View.VISIBLE
                 updateUser()
-                finish()
             }
+        }
+        profilePictureAdd.setOnClickListener {
+            val i = Intent(this, FileChooser::class.java)
+            i.putExtra(Constants.SELECTION_MODE, Constants.SELECTION_MODES.SINGLE_SELECTION.ordinal)
+            startActivityForResult(i, fileRequest)
         }
     }
 
@@ -66,13 +100,42 @@ class EditProfileActivity : AppCompatActivity() {
         return result
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == fileRequest && data != null) {
+            if (resultCode == Activity.RESULT_OK) {
+                uri = data.data!!
+                profilePicture.setImageURI(uri)
+            }
+        }
+    }
+
+    @SuppressLint("SimpleDateFormat")
     private fun updateUser() {
         val currentUser: User = Paper.book().read<User>("user", null)
         currentUser.fullName = name.text.toString()
         currentUser.mobileNumber = mobileNumber.text.toString()
         currentUser.bloodType = bloodType.text.toString()
+        if (uri != null) {
+            @Suppress("SpellCheckingInspection")
+            val time = SimpleDateFormat("yyyyMMddHHmmss").format(Date())
+            currentUser.lastUpdated = time
+            StorageWriter.upload(
+                "/user/" + currentUser.id + ".jpg", getByteData(uri!!),
+                OnSuccessListener {
+                    writeUserInfoIntoDatabase(currentUser)
+                }, null
+            )
+        } else {
+           writeUserInfoIntoDatabase(currentUser)
+        }
+    }
+
+    private fun writeUserInfoIntoDatabase(currentUser: User) {
         Paper.book().write("user", currentUser)
         DatabaseWriter.write("/user/" + currentUser.id, currentUser)
+        progressBar.visibility = View.GONE
+        finish()
     }
 
     private fun updateData() {
@@ -104,5 +167,27 @@ class EditProfileActivity : AppCompatActivity() {
             bloodType.setText("none")
         }
         Paper.book().write("user", user)
+        val photoRef =
+            Firebase.storage.reference.child("/user/" + Firebase.auth.currentUser!!.uid + ".jpg")
+        GlideApp
+            .with(this)
+            .load(photoRef)
+            .signature(ObjectKey(user.profilePicturePath+user.lastUpdated))
+            .into(profilePicture)
+    }
+
+    private fun getByteData(uri: Uri): ByteArray {
+        @Suppress("DEPRECATION") var bitmap = if (Build.VERSION.SDK_INT >= 29) {
+            ImageDecoder.decodeBitmap(ImageDecoder.createSource(this.contentResolver, uri))
+        } else {
+            MediaStore.Images.Media.getBitmap(this.contentResolver, uri)
+        }
+        val byteOutputStream = ByteArrayOutputStream()
+        bitmap = Bitmap.createScaledBitmap(
+            bitmap, 1024,
+            ((bitmap.height * (1024.0 / bitmap.width)).toInt()), true
+        )
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteOutputStream)
+        return byteOutputStream.toByteArray()
     }
 }

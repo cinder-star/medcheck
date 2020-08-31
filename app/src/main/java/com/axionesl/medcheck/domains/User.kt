@@ -8,5 +8,6 @@ data class User(
     val accountType: String? = null,
     var bloodType: String? = null,
     var dateOfBirth: String? = null,
-    var profilePicturePath: String? = null
+    var profilePicturePath: String? = null,
+    var lastUpdated: String? = null
 )

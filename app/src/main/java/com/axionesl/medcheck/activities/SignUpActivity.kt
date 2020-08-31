@@ -31,6 +31,9 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import io.paperdb.Paper
 import java.io.ByteArrayOutputStream
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class SignUpActivity : AppCompatActivity() {
@@ -151,7 +154,10 @@ class SignUpActivity : AppCompatActivity() {
             }
     }
 
+    @SuppressLint("SimpleDateFormat")
     private fun prepareUserData(id: String, email: String): User {
+        @Suppress("SpellCheckingInspection")
+        val time = SimpleDateFormat("yyyyMMddHHmmss").format(Date())
         return User(
             auth.currentUser!!.uid,
             email,
@@ -159,7 +165,8 @@ class SignUpActivity : AppCompatActivity() {
             mobileNumber.text.toString(),
             accountType.selectedItem.toString(),
             bloodType.text.toString(),
-            profilePicturePath = "$id.jpg"
+            profilePicturePath = "$id.jpg",
+            lastUpdated = time
         )
     }
 
