@@ -1,5 +1,6 @@
 package com.axionesl.medcheck.activities
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -78,13 +79,18 @@ class ProfileActivity : AppCompatActivity() {
         })
     }
 
+    @SuppressLint("SetTextI18n")
     private fun updateUI(user: User?) {
         name.text = user!!.fullName
         email.text = user.email
         mobileNumber.text = user.mobileNumber
         accountType.text = user.accountType
         bloodType.text = user.bloodType
-        birthDate.text = user.dateOfBirth
+        if (user.dateOfBirth != null) {
+            birthDate.text = user.dateOfBirth
+        } else {
+            birthDate.text = "None"
+        }
         if (user.profilePicturePath != null) {
             val picRef = Firebase.storage.reference.child("/user/"+Firebase.auth.currentUser!!.uid+".jpg")
             GlideApp
