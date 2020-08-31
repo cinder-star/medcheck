@@ -97,7 +97,7 @@ class EditProfileActivity : AppCompatActivity() {
                 myCalendar[Calendar.YEAR] = selectedYear
                 myCalendar[Calendar.MONTH] = selectedMonth
                 myCalendar[Calendar.DAY_OF_MONTH] = selectedDay
-                val myFormat = "dd/MM/yy" //Change as you need
+                val myFormat = "dd-MM-yy" //Change as you need
                 val sdf = SimpleDateFormat(myFormat, Locale.US)
                 birthday.text = sdf.format(myCalendar.time)
             }, mYear, mMonth, mDay)
@@ -141,6 +141,7 @@ class EditProfileActivity : AppCompatActivity() {
         currentUser.fullName = name.text.toString()
         currentUser.mobileNumber = mobileNumber.text.toString()
         currentUser.bloodType = bloodType.text.toString()
+        currentUser.dateOfBirth = birthday.text.toString()
         if (uri != null) {
             @Suppress("SpellCheckingInspection")
             val time = SimpleDateFormat("yyyyMMddHHmmss").format(Date())

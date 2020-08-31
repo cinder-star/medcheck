@@ -31,6 +31,7 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var bloodType: TextView
     private lateinit var logOut: Button
     private lateinit var profilePicture: ImageView
+    private lateinit var birthDate: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
@@ -46,6 +47,7 @@ class ProfileActivity : AppCompatActivity() {
         bloodType = findViewById(R.id.user_blood_type)
         logOut = findViewById(R.id.log_out)
         profilePicture = findViewById(R.id.profile_picture)
+        birthDate = findViewById(R.id.user_birth_date)
     }
 
     private fun bindListeners() {
@@ -82,6 +84,7 @@ class ProfileActivity : AppCompatActivity() {
         mobileNumber.text = user.mobileNumber
         accountType.text = user.accountType
         bloodType.text = user.bloodType
+        birthDate.text = user.dateOfBirth
         if (user.profilePicturePath != null) {
             val picRef = Firebase.storage.reference.child("/user/"+Firebase.auth.currentUser!!.uid+".jpg")
             GlideApp

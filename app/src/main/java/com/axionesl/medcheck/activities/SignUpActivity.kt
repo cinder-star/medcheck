@@ -104,7 +104,7 @@ class SignUpActivity : AppCompatActivity() {
                 myCalendar[Calendar.YEAR] = selectedYear
                 myCalendar[Calendar.MONTH] = selectedMonth
                 myCalendar[Calendar.DAY_OF_MONTH] = selectedDay
-                val myFormat = "dd/MM/yy" //Change as you need
+                val myFormat = "dd-MM-yy" //Change as you need
                 val sdf = SimpleDateFormat(myFormat, Locale.US)
                 birthday.text = sdf.format(myCalendar.time)
             }, mYear, mMonth, mDay)
@@ -188,8 +188,9 @@ class SignUpActivity : AppCompatActivity() {
             mobileNumber.text.toString(),
             accountType.selectedItem.toString(),
             bloodType.text.toString(),
-            profilePicturePath = "$id.jpg",
-            lastUpdated = time
+            birthday.text.toString(),
+            "$id.jpg",
+            time
         )
     }
 
