@@ -4,8 +4,11 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.database.Cursor
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.ImageDecoder
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
@@ -15,11 +18,16 @@ import com.axionesl.medcheck.R
 import com.axionesl.medcheck.domains.Test
 import com.axionesl.medcheck.domains.User
 import com.axionesl.medcheck.repository.DatabaseWriter
+import com.axionesl.medcheck.repository.StorageWriter
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import io.paperdb.Paper
+import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -39,8 +47,10 @@ class AddTestActivity : AppCompatActivity() {
     private lateinit var radioGroup: RadioGroup
     private lateinit var createTest: Button
     private lateinit var testPhoto: ImageView
+    private lateinit var addTestPhoto: FloatingActionButton
     private val RESULT_LOAD_IMAGE = 1
     private var uri: Uri? = null
+    private var test: Test? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,6 +75,10 @@ class AddTestActivity : AppCompatActivity() {
         heightFtValue = findViewById(R.id.height_feet)
         heightInchValue = findViewById(R.id.height_inch)
         testPhoto = findViewById(R.id.test_photo)
+        addTestPhoto = findViewById(R.id.add_test_photo)
+        if (intent.extras != null) {
+            test = intent.extras!!.get("test") as Test
+        }
     }
 
     private fun bindListeners() {
@@ -85,8 +99,24 @@ class AddTestActivity : AppCompatActivity() {
             if (validate()) {
                 val test: Test = getTestData()
                 DatabaseWriter.write("/tests/" + test.id, test)
-                finish()
+                if (test.testPicture != null) {
+                    StorageWriter.upload(
+                        "/tests/" + test.testPicture,
+                        getByteData(uri!!),
+                        OnSuccessListener {
+                            finish()
+                        },
+                        OnFailureListener { finish() })
+                } else {
+                    finish()
+                }
             }
+        }
+        addTestPhoto.setOnClickListener {
+            val i = Intent(
+                Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+            )
+            startActivityForResult(i, RESULT_LOAD_IMAGE)
         }
     }
 
@@ -110,10 +140,33 @@ class AddTestActivity : AppCompatActivity() {
         }
     }
 
+    private fun getByteData(uri: Uri): ByteArray {
+        @Suppress("DEPRECATION") var bitmap = if (Build.VERSION.SDK_INT >= 29) {
+            ImageDecoder.decodeBitmap(ImageDecoder.createSource(this.contentResolver, uri))
+        } else {
+            MediaStore.Images.Media.getBitmap(this.contentResolver, uri)
+        }
+        val byteOutputStream = ByteArrayOutputStream()
+        bitmap = Bitmap.createScaledBitmap(
+            bitmap, 1024,
+            ((bitmap.height * (1024.0 / bitmap.width)).toInt()), true
+        )
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteOutputStream)
+        return byteOutputStream.toByteArray()
+    }
+
     @SuppressLint("SimpleDateFormat")
     private fun getTestData(): Test {
         @Suppress("SpellCheckingInspection")
-        val id = SimpleDateFormat("yyyyMMddHHmmss").format(Date())
+        var id = SimpleDateFormat("yyyyMMddHHmmss").format(Date())
+        var testPhoto: String? = null
+        if (test != null) {
+            id = test!!.id!!
+            testPhoto = test!!.testPicture!!
+        }
+        if (uri != null) {
+            testPhoto = "$id.jpg"
+        }
         val date = SimpleDateFormat("dd-MM-yyyy").format(Date())
         val patient: String? = Firebase.auth.currentUser!!.uid
         val mobileNumber: String? = Paper.book().read<User>("user").mobileNumber
@@ -136,7 +189,9 @@ class AddTestActivity : AppCompatActivity() {
             null,
             patient,
             date,
-            mobileNumber
+            null,
+            mobileNumber,
+            testPhoto
         )
     }
 
