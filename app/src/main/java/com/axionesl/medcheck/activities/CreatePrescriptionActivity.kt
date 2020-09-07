@@ -34,6 +34,7 @@ class CreatePrescriptionActivity :
                 test.prescription = prescription.text.toString()
                 test.status = "Checked"
                 test.checkedBy = Paper.book().read<User>("user", null).fullName
+                test.docNumber = Paper.book().read<User>("user", null).mobileNumber
                 DatabaseWriter.write("/tests/" + test.id, test)
                 val smsManager: SmsManager = SmsManager.getDefault()
                 smsManager.sendTextMessage(
