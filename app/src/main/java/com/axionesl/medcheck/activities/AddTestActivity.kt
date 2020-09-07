@@ -11,6 +11,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.telephony.SmsManager
 import android.util.Log
 import android.view.View
 import android.widget.*
@@ -21,6 +22,7 @@ import com.axionesl.medcheck.domains.User
 import com.axionesl.medcheck.repository.DatabaseWriter
 import com.axionesl.medcheck.repository.StorageWriter
 import com.axionesl.medcheck.utils.GlideApp
+import com.bumptech.glide.signature.ObjectKey
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -104,6 +106,7 @@ class AddTestActivity : AppCompatActivity() {
             GlideApp
                 .with(this)
                 .load(reference)
+                .signature(ObjectKey(test.testPicture+test.lastModified))
                 .into(testPhoto)
         }
         updateHeight(test.height)
@@ -149,7 +152,17 @@ class AddTestActivity : AppCompatActivity() {
             if (validate()) {
                 val test: Test = getTestData()
                 DatabaseWriter.write("/tests/" + test.id, test)
-                if (test.testPicture != null) {
+                if (test.docNumber != null) {
+                    val smsManager: SmsManager = SmsManager.getDefault()
+                    smsManager.sendTextMessage(
+                        "+88" + test.docNumber,
+                        null,
+                        createMessage(test),
+                        null,
+                        null
+                    )
+                }
+                if (uri != null) {
                     StorageWriter.upload(
                         "/tests/" + test.testPicture,
                         getByteData(uri!!),
@@ -168,6 +181,10 @@ class AddTestActivity : AppCompatActivity() {
             )
             startActivityForResult(i, RESULT_LOAD_IMAGE)
         }
+    }
+
+    private fun createMessage(test: Test): String? {
+        return "Your patient "+test.patientName+" has updated test. (id: " + test.id + ")."
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -209,6 +226,7 @@ class AddTestActivity : AppCompatActivity() {
     private fun getTestData(): Test {
         @Suppress("SpellCheckingInspection")
         var id = SimpleDateFormat("yyyyMMddHHmmss").format(Date())
+        val lastModified = id
         var testPhoto: String? = null
         if (test != null) {
             id = test!!.id!!
@@ -222,6 +240,10 @@ class AddTestActivity : AppCompatActivity() {
         val patientName: String? = Paper.book().read<User>("user").fullName
         val mobileNumber: String? = Paper.book().read<User>("user").mobileNumber
         var details: String? = null
+        var docNumber: String? = null
+        if (test != null) {
+            docNumber = test!!.docNumber
+        }
         if (problemDetails.text.toString().isNotEmpty()) {
             details = problemDetails.text.toString()
         }
@@ -243,7 +265,9 @@ class AddTestActivity : AppCompatActivity() {
             null,
             mobileNumber,
             testPhoto,
-            patientName
+            patientName,
+            lastModified,
+            docNumber
         )
     }
 

@@ -20,5 +20,7 @@ data class Test(
     var prescription: String? = null,
     var mobileNumber: String? = null,
     var testPicture: String? = null,
-    var patientName: String? = null
+    var patientName: String? = null,
+    var lastModified: String? = null,
+    var docNumber: String? = null
 ) : Serializable

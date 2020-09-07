@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.axionesl.medcheck.R
 import com.axionesl.medcheck.domains.Test
 import com.axionesl.medcheck.domains.User
+import com.bumptech.glide.signature.ObjectKey
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -106,6 +107,7 @@ abstract class AbstractTestDetailsActivity(private val xmlId: Int) : AppCompatAc
                 GlideApp
                     .with(this)
                     .load(reference)
+                    .signature(ObjectKey(test.testPicture+test.lastModified))
                     .into(testPicture)
             }
         }
