@@ -11,6 +11,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -32,6 +33,8 @@ import io.paperdb.Paper
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 class AddTestActivity : AppCompatActivity() {
     private lateinit var heightCm: TextInputEditText
@@ -50,6 +53,7 @@ class AddTestActivity : AppCompatActivity() {
     private lateinit var createTest: Button
     private lateinit var testPhoto: ImageView
     private lateinit var addTestPhoto: FloatingActionButton
+    private lateinit var feetRadio: RadioButton
     private val RESULT_LOAD_IMAGE = 1
     private var uri: Uri? = null
     private var test: Test? = null
@@ -78,6 +82,7 @@ class AddTestActivity : AppCompatActivity() {
         heightInchValue = findViewById(R.id.height_inch)
         testPhoto = findViewById(R.id.test_photo)
         addTestPhoto = findViewById(R.id.add_test_photo)
+        feetRadio = findViewById(R.id.feet)
         if (intent.extras != null) {
             test = intent.extras!!.get("test") as Test
             updateUi(test!!)
@@ -95,11 +100,34 @@ class AddTestActivity : AppCompatActivity() {
             problemDetails.setText(test.problemDetails)
         }
         if (test.testPicture != null) {
-            val reference = Firebase.storage.reference.child("tests/"+test.testPicture)
+            val reference = Firebase.storage.reference.child("tests/" + test.testPicture)
             GlideApp
                 .with(this)
                 .load(reference)
                 .into(testPhoto)
+        }
+        updateHeight(test.height)
+    }
+
+    private fun updateHeight(height: String?) {
+        val p: Pattern = Pattern.compile("-?\\d+")
+        val m: Matcher = p.matcher(height!!)
+        val numbers = arrayListOf<Int>()
+        while (m.find()) {
+            numbers.add(m.group().toInt())
+        }
+        if (numbers.size == 1) {
+            heightFeet.visibility = View.GONE
+            heightCm.visibility = View.VISIBLE
+            heightCmHolder.visibility = View.VISIBLE
+            heightCm.setText(numbers[0].toString())
+        } else {
+            heightFeet.visibility = View.VISIBLE
+            heightCm.visibility = View.GONE
+            heightCmHolder.visibility = View.GONE
+            feetRadio.isChecked = true
+            heightFtValue.setText(numbers[0].toString())
+            heightInchValue.setText(numbers[1].toString())
         }
     }
 
