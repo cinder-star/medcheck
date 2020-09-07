@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.database.Cursor
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
@@ -13,8 +15,6 @@ import android.provider.MediaStore
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import com.aditya.filebrowser.Constants
-import com.aditya.filebrowser.FileChooser
 import com.axionesl.medcheck.R
 import com.axionesl.medcheck.domains.User
 import com.axionesl.medcheck.repository.DatabaseWriter
@@ -47,8 +47,8 @@ class EditProfileActivity : AppCompatActivity() {
     private lateinit var progressBar: ProgressBar
     private lateinit var birthday: TextView
     private lateinit var chooseDate: ImageButton
+    private val RESULT_LOAD_IMAGE = 1
     private var uri: Uri? = null
-    private val fileRequest = 120
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_profile)
@@ -77,9 +77,10 @@ class EditProfileActivity : AppCompatActivity() {
             }
         }
         profilePictureAdd.setOnClickListener {
-            val i = Intent(this, FileChooser::class.java)
-            i.putExtra(Constants.SELECTION_MODE, Constants.SELECTION_MODES.SINGLE_SELECTION.ordinal)
-            startActivityForResult(i, fileRequest)
+            val i = Intent(
+                Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+            )
+            startActivityForResult(i, RESULT_LOAD_IMAGE)
         }
         chooseDate.setOnClickListener {
             val currentDate = Calendar.getInstance()
@@ -91,7 +92,8 @@ class EditProfileActivity : AppCompatActivity() {
     }
 
     private fun startChooserDialogue(mDay: Int, mMonth: Int, mYear: Int) {
-        val mDatePicker = DatePickerDialog(this,
+        val mDatePicker = DatePickerDialog(
+            this,
             { _, selectedYear, selectedMonth, selectedDay ->
                 val myCalendar = Calendar.getInstance()
                 myCalendar[Calendar.YEAR] = selectedYear
@@ -100,7 +102,8 @@ class EditProfileActivity : AppCompatActivity() {
                 val myFormat = "dd-MM-yy" //Change as you need
                 val sdf = SimpleDateFormat(myFormat, Locale.US)
                 birthday.text = sdf.format(myCalendar.time)
-            }, mYear, mMonth, mDay)
+            }, mYear, mMonth, mDay
+        )
         mDatePicker.setTitle("Select date")
         mDatePicker.show()
     }
@@ -127,10 +130,20 @@ class EditProfileActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == fileRequest && data != null) {
+        if (requestCode == RESULT_LOAD_IMAGE && data != null) {
             if (resultCode == Activity.RESULT_OK) {
-                uri = data.data!!
                 profilePicture.setImageURI(uri)
+                uri = data.data
+                val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
+                val cursor: Cursor? = contentResolver.query(
+                    uri!!,
+                    filePathColumn, null, null, null
+                )
+                cursor!!.moveToFirst()
+                val columnIndex: Int = cursor.getColumnIndex(filePathColumn[0])
+                val picturePath: String = cursor.getString(columnIndex)
+                cursor.close()
+                profilePicture.setImageBitmap(BitmapFactory.decodeFile(picturePath))
             }
         }
     }

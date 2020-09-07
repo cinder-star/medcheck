@@ -5,7 +5,9 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
+import android.database.Cursor
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
@@ -16,8 +18,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatSpinner
-import com.aditya.filebrowser.Constants
-import com.aditya.filebrowser.FileChooser
 import com.axionesl.medcheck.R
 import com.axionesl.medcheck.domains.User
 import com.axionesl.medcheck.repository.DatabaseWriter
@@ -49,7 +49,7 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var chooseDate: ImageButton
     private val auth = Firebase.auth
     private var uri: Uri? = null
-    private val fileRequest = 120
+    private val RESULT_LOAD_IMAGE = 1
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,9 +84,10 @@ class SignUpActivity : AppCompatActivity() {
             }
         }
         profilePictureAdd.setOnClickListener {
-            val i = Intent(this, FileChooser::class.java)
-            i.putExtra(Constants.SELECTION_MODE, Constants.SELECTION_MODES.SINGLE_SELECTION.ordinal)
-            startActivityForResult(i, fileRequest)
+            val i = Intent(
+                Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+            )
+            startActivityForResult(i, RESULT_LOAD_IMAGE)
         }
         chooseDate.setOnClickListener {
             val currentDate = Calendar.getInstance()
@@ -114,10 +115,20 @@ class SignUpActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == fileRequest && data != null) {
+        if (requestCode == RESULT_LOAD_IMAGE && data != null) {
             if (resultCode == Activity.RESULT_OK) {
-                uri = data.data!!
                 profilePicture.setImageURI(uri)
+                uri = data.data
+                val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
+                val cursor: Cursor? = contentResolver.query(
+                    uri!!,
+                    filePathColumn, null, null, null
+                )
+                cursor!!.moveToFirst()
+                val columnIndex: Int = cursor.getColumnIndex(filePathColumn[0])
+                val picturePath: String = cursor.getString(columnIndex)
+                cursor.close()
+                profilePicture.setImageBitmap(BitmapFactory.decodeFile(picturePath))
             }
         }
     }
