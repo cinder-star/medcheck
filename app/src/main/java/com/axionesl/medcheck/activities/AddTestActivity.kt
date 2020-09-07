@@ -19,6 +19,7 @@ import com.axionesl.medcheck.domains.Test
 import com.axionesl.medcheck.domains.User
 import com.axionesl.medcheck.repository.DatabaseWriter
 import com.axionesl.medcheck.repository.StorageWriter
+import com.axionesl.medcheck.utils.GlideApp
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -26,6 +27,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import io.paperdb.Paper
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
@@ -78,6 +80,26 @@ class AddTestActivity : AppCompatActivity() {
         addTestPhoto = findViewById(R.id.add_test_photo)
         if (intent.extras != null) {
             test = intent.extras!!.get("test") as Test
+            updateUi(test!!)
+        }
+    }
+
+    private fun updateUi(test: Test) {
+        weight.setText(test.weight.toString())
+        bpm.setText(test.bpm.toString())
+        bloodPressure.setText(test.bloodPressure.toString())
+        glucoseLevel.setText(test.glucoseLevel.toString())
+        oxygenLevel.setText(test.oxygenLevel.toString())
+        temperature.setText(test.oxygenLevel.toString())
+        if (test.problemDetails != null) {
+            problemDetails.setText(test.problemDetails)
+        }
+        if (test.testPicture != null) {
+            val reference = Firebase.storage.reference.child("tests/"+test.testPicture)
+            GlideApp
+                .with(this)
+                .load(reference)
+                .into(testPhoto)
         }
     }
 

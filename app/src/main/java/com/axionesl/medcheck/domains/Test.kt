@@ -1,5 +1,7 @@
 package com.axionesl.medcheck.domains
 
+import java.io.Serializable
+
 data class Test(
     val id: String? = null,
     val weight: Double? = 0.0,
@@ -19,4 +21,4 @@ data class Test(
     var mobileNumber: String? = null,
     var testPicture: String? = null,
     var patientName: String? = null
-)
+) : Serializable

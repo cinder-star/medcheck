@@ -66,4 +66,5 @@
     <string name="weight_status">Weight Status:</string>
     <string name="birthday">Birthday:</string>
     <string name="text_none">None</string>
+    <string name="edit_test">Edit Test</string>
 </resources>
