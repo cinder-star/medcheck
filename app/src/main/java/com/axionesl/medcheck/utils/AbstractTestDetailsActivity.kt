@@ -2,6 +2,7 @@ package com.axionesl.medcheck.utils
 
 import android.graphics.Color
 import android.os.Bundle
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.axionesl.medcheck.R
@@ -13,6 +14,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import io.paperdb.Paper
 
 abstract class AbstractTestDetailsActivity(private val xmlId: Int) : AppCompatActivity() {
@@ -30,6 +32,7 @@ abstract class AbstractTestDetailsActivity(private val xmlId: Int) : AppCompatAc
     private lateinit var testCheckedBy: TextView
     private lateinit var testDate: TextView
     private lateinit var testWeightStatus: TextView
+    private lateinit var testPicture: ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(xmlId)
@@ -71,12 +74,13 @@ abstract class AbstractTestDetailsActivity(private val xmlId: Int) : AppCompatAc
         testCheckedBy = findViewById(R.id.test_checked_by)
         testDate = findViewById(R.id.test_date)
         testWeightStatus = findViewById(R.id.test_weight_status)
+        testPicture = findViewById(R.id.test_photo)
     }
 
     open fun updateUI(test: Test?) {
         runOnUiThread {
             testId.text = test!!.id
-            testPatientName.text = Paper.book().read<User>("user", null).fullName
+            testPatientName.text = test.patientName
             testHeight.text = test.height
             testWeight.text = test.weight.toString()
             testBMI.text = test.bmi.toString()
@@ -97,6 +101,13 @@ abstract class AbstractTestDetailsActivity(private val xmlId: Int) : AppCompatAc
             }
             testDate.text = test.date
             testWeightStatus.text = getWeightStatus(test.bmi)
+            if (test.testPicture != null) {
+                val reference = Firebase.storage.reference.child("tests/"+test.testPicture)
+                GlideApp
+                    .with(this)
+                    .load(reference)
+                    .into(testPicture)
+            }
         }
     }
 

@@ -169,6 +169,7 @@ class AddTestActivity : AppCompatActivity() {
         }
         val date = SimpleDateFormat("dd-MM-yyyy").format(Date())
         val patient: String? = Firebase.auth.currentUser!!.uid
+        val patientName: String? = Paper.book().read<User>("user").fullName
         val mobileNumber: String? = Paper.book().read<User>("user").mobileNumber
         var details: String? = null
         if (problemDetails.text.toString().isNotEmpty()) {
@@ -191,7 +192,8 @@ class AddTestActivity : AppCompatActivity() {
             date,
             null,
             mobileNumber,
-            testPhoto
+            testPhoto,
+            patientName
         )
     }
 

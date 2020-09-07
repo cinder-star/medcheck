@@ -387,6 +387,11 @@
                 android:textColor="@color/black"
                 android:textSize="20sp" />
         </LinearLayout>
+        <ImageView
+            android:id="@+id/test_photo"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            tools:ignore="ContentDescription" />
 
     </LinearLayout>
 </ScrollView>
