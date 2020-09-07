@@ -1,12 +1,15 @@
 package com.axionesl.medcheck.activities
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
+import android.database.Cursor
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.View
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.RadioButton
-import android.widget.RadioGroup
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.axionesl.medcheck.R
 import com.axionesl.medcheck.domains.Test
@@ -35,6 +38,10 @@ class AddTestActivity : AppCompatActivity() {
     private lateinit var problemDetails: TextInputEditText
     private lateinit var radioGroup: RadioGroup
     private lateinit var createTest: Button
+    private lateinit var testPhoto: ImageView
+    private val RESULT_LOAD_IMAGE = 1
+    private var uri: Uri? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_test)
@@ -57,6 +64,7 @@ class AddTestActivity : AppCompatActivity() {
         problemDetails = findViewById(R.id.problem_details)
         heightFtValue = findViewById(R.id.height_feet)
         heightInchValue = findViewById(R.id.height_inch)
+        testPhoto = findViewById(R.id.test_photo)
     }
 
     private fun bindListeners() {
@@ -78,6 +86,26 @@ class AddTestActivity : AppCompatActivity() {
                 val test: Test = getTestData()
                 DatabaseWriter.write("/tests/" + test.id, test)
                 finish()
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == RESULT_LOAD_IMAGE && data != null) {
+            if (resultCode == Activity.RESULT_OK) {
+                testPhoto.setImageURI(uri)
+                uri = data.data
+                val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
+                val cursor: Cursor? = contentResolver.query(
+                    uri!!,
+                    filePathColumn, null, null, null
+                )
+                cursor!!.moveToFirst()
+                val columnIndex: Int = cursor.getColumnIndex(filePathColumn[0])
+                val picturePath: String = cursor.getString(columnIndex)
+                cursor.close()
+                testPhoto.setImageBitmap(BitmapFactory.decodeFile(picturePath))
             }
         }
     }
