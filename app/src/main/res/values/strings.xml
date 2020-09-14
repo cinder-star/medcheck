@@ -77,4 +77,7 @@
     <string name="patient">Patient</string>
     <string name="degree">Degree</string>
     <string name="current_designation">Current Designation</string>
+    <string name="user_doctor_type">Doctor Type:</string>
+    <string name="user_degree">Degree:</string>
+    <string name="user_current_designation">Current Designation:</string>
 </resources>

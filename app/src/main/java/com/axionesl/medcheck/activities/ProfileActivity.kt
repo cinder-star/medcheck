@@ -6,8 +6,10 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.axionesl.medcheck.R
@@ -33,6 +35,12 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var logOut: Button
     private lateinit var profilePicture: ImageView
     private lateinit var birthDate: TextView
+    private lateinit var doctorType: TextView
+    private lateinit var degree: TextView
+    private lateinit var currentDesignation: TextView
+    private lateinit var doctorTypeHolder: LinearLayout
+    private lateinit var degreeHolder: LinearLayout
+    private lateinit var currentDesignationHolder: LinearLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
@@ -49,6 +57,12 @@ class ProfileActivity : AppCompatActivity() {
         logOut = findViewById(R.id.log_out)
         profilePicture = findViewById(R.id.profile_picture)
         birthDate = findViewById(R.id.user_birth_date)
+        degree = findViewById(R.id.user_degree)
+        doctorType = findViewById(R.id.user_doctor_type)
+        currentDesignation = findViewById(R.id.user_current_designation)
+        degreeHolder = findViewById(R.id.degree_holder)
+        doctorTypeHolder = findViewById(R.id.doctor_type_holder)
+        currentDesignationHolder = findViewById(R.id.current_designation_holder)
     }
 
     private fun bindListeners() {
@@ -86,11 +100,7 @@ class ProfileActivity : AppCompatActivity() {
         mobileNumber.text = user.mobileNumber
         accountType.text = user.accountType
         bloodType.text = user.bloodType
-        if (user.dateOfBirth != null) {
-            birthDate.text = user.dateOfBirth
-        } else {
-            birthDate.text = "None"
-        }
+        birthDate.text = user.dateOfBirth
         if (user.profilePicturePath != null) {
             val picRef =
                 Firebase.storage.reference.child("/user/" + Firebase.auth.currentUser!!.uid + ".jpg")
@@ -99,6 +109,14 @@ class ProfileActivity : AppCompatActivity() {
                 .load(picRef)
                 .signature(ObjectKey(user.profilePicturePath + user.lastUpdated))
                 .into(profilePicture)
+        }
+        if (user.accountType == "Doctor") {
+            degreeHolder.visibility = View.VISIBLE
+            doctorTypeHolder.visibility = View.VISIBLE
+            currentDesignationHolder.visibility = View.VISIBLE
+            degree.text = user.degree
+            doctorType.text = user.doctorType
+            currentDesignation.text = user.currentDesignation
         }
     }
 
