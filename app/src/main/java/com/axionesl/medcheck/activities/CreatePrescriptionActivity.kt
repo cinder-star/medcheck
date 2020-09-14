@@ -50,7 +50,7 @@ class CreatePrescriptionActivity :
     }
 
     private fun createMessage(test: Test): String? {
-        return "Your test (id: " + test.id + ") has been checked by " + test.checkedBy
+        return "Your test (id: " + test.id + ") has been checked by " + test.checkedBy + "\nPrescription:\n" + test.prescription
     }
 
     private fun validate(): Boolean {
