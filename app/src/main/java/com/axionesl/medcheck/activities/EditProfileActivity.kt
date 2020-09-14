@@ -15,6 +15,7 @@ import android.provider.MediaStore
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatSpinner
 import com.axionesl.medcheck.R
 import com.axionesl.medcheck.domains.User
 import com.axionesl.medcheck.repository.DatabaseWriter
@@ -24,6 +25,7 @@ import com.bumptech.glide.signature.ObjectKey
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -47,6 +49,12 @@ class EditProfileActivity : AppCompatActivity() {
     private lateinit var progressBar: ProgressBar
     private lateinit var birthday: TextView
     private lateinit var chooseDate: ImageButton
+    private lateinit var degree: TextInputEditText
+    private lateinit var doctorType: AppCompatSpinner
+    private lateinit var currentDesignation: TextInputEditText
+    private lateinit var degreeHolder: TextInputLayout
+    private lateinit var currentDesignationHolder: TextInputLayout
+    @Suppress("PrivatePropertyName")
     private val RESULT_LOAD_IMAGE = 1
     private var uri: Uri? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,6 +75,11 @@ class EditProfileActivity : AppCompatActivity() {
         progressBar = findViewById(R.id.progress_bar)
         birthday = findViewById(R.id.birthday)
         chooseDate = findViewById(R.id.choose_date)
+        degree = findViewById(R.id.user_degree)
+        currentDesignation = findViewById(R.id.user_current_designation)
+        doctorType = findViewById(R.id.user_doctor_type)
+        degreeHolder = findViewById(R.id.degree_holder)
+        currentDesignationHolder = findViewById(R.id.current_designation_holder)
     }
 
     private fun bindListeners() {
@@ -134,7 +147,7 @@ class EditProfileActivity : AppCompatActivity() {
             if (resultCode == Activity.RESULT_OK) {
                 profilePicture.setImageURI(uri)
                 uri = data.data
-                val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
+                @Suppress("DEPRECATION") val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
                 val cursor: Cursor? = contentResolver.query(
                     uri!!,
                     filePathColumn, null, null, null
@@ -155,6 +168,11 @@ class EditProfileActivity : AppCompatActivity() {
         currentUser.mobileNumber = mobileNumber.text.toString()
         currentUser.bloodType = bloodType.text.toString()
         currentUser.dateOfBirth = birthday.text.toString()
+        if (currentUser.accountType == "Doctor") {
+            currentUser.degree = degree.text.toString()
+            currentUser.currentDesignation = currentDesignation.text.toString()
+            currentUser.doctorType = doctorType.selectedItem.toString()
+        }
         if (uri != null) {
             @Suppress("SpellCheckingInspection")
             val time = SimpleDateFormat("yyyyMMddHHmmss").format(Date())
@@ -215,6 +233,28 @@ class EditProfileActivity : AppCompatActivity() {
                 .load(photoRef)
                 .signature(ObjectKey(user.profilePicturePath + user.lastUpdated))
                 .into(profilePicture)
+        }
+        if (user.dateOfBirth != null) {
+            birthday.text = user.dateOfBirth
+        }
+        if (user.accountType == "Doctor") {
+            degreeHolder.visibility = View.VISIBLE
+            currentDesignationHolder.visibility = View.VISIBLE
+            doctorType.visibility = View.VISIBLE
+            degree.setText(user.degree)
+            currentDesignation.setText(user.currentDesignation)
+            val compareValue = user.doctorType
+            val adapter = ArrayAdapter.createFromResource(
+                this,
+                R.array.speciality_type,
+                android.R.layout.simple_spinner_item
+            )
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            doctorType.adapter = adapter
+            if (compareValue != null) {
+                val spinnerPosition = adapter.getPosition(compareValue)
+                doctorType.setSelection(spinnerPosition)
+            }
         }
     }
 
