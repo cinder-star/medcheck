@@ -25,6 +25,7 @@ import com.axionesl.medcheck.repository.StorageWriter
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import io.paperdb.Paper
@@ -40,15 +41,22 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var fullName: TextInputEditText
     private lateinit var mobileNumber: TextInputEditText
     private lateinit var bloodType: TextInputEditText
-    private lateinit var accountType: AppCompatSpinner
+    private lateinit var accountType: RadioGroup
+    private lateinit var doctorType: AppCompatSpinner
     private lateinit var signUp: Button
     private lateinit var progressBar: ProgressBar
     private lateinit var profilePicture: ImageView
     private lateinit var profilePictureAdd: FloatingActionButton
     private lateinit var birthday: TextView
     private lateinit var chooseDate: ImageButton
+    private lateinit var degree: TextInputEditText
+    private lateinit var currentDesignation: TextInputEditText
+    private lateinit var degreeHolder: TextInputLayout
+    private lateinit var currentDesignationHolder: TextInputLayout
     private val auth = Firebase.auth
     private var uri: Uri? = null
+
+    @Suppress("PrivatePropertyName")
     private val RESULT_LOAD_IMAGE = 1
 
 
@@ -73,6 +81,11 @@ class SignUpActivity : AppCompatActivity() {
         profilePictureAdd = findViewById(R.id.add_profile_picture)
         birthday = findViewById(R.id.birthday)
         chooseDate = findViewById(R.id.choose_date)
+        doctorType = findViewById(R.id.appCompatSpinner)
+        degree = findViewById(R.id.degree)
+        currentDesignation = findViewById(R.id.current_designation)
+        degreeHolder = findViewById(R.id.textInputLayout7)
+        currentDesignationHolder = findViewById(R.id.textInputLayout8)
     }
 
     private fun bindListeners() {
@@ -96,10 +109,29 @@ class SignUpActivity : AppCompatActivity() {
             val mDay = currentDate[Calendar.DAY_OF_MONTH]
             startChooserDialogue(mDay, mMonth, mYear)
         }
+        accountType.setOnCheckedChangeListener { _, i ->
+            val radioButton: RadioButton = findViewById(i)
+            val text = radioButton.text.toString()
+            if (text == "Doctor") {
+                changeVisibility(View.VISIBLE)
+            } else {
+                changeVisibility(View.GONE)
+            }
+        }
     }
 
+    private fun changeVisibility(visibility: Int) {
+        doctorType.visibility = visibility
+        degree.visibility = visibility
+        degreeHolder.visibility = visibility
+        currentDesignation.visibility = visibility
+        currentDesignationHolder.visibility = visibility
+    }
+
+
     private fun startChooserDialogue(mDay: Int, mMonth: Int, mYear: Int) {
-        val mDatePicker = DatePickerDialog(this,
+        val mDatePicker = DatePickerDialog(
+            this,
             { _, selectedYear, selectedMonth, selectedDay ->
                 val myCalendar = Calendar.getInstance()
                 myCalendar[Calendar.YEAR] = selectedYear
@@ -108,7 +140,8 @@ class SignUpActivity : AppCompatActivity() {
                 val myFormat = "dd-MM-yy" //Change as you need
                 val sdf = SimpleDateFormat(myFormat, Locale.US)
                 birthday.text = sdf.format(myCalendar.time)
-            }, mYear, mMonth, mDay)
+            }, mYear, mMonth, mDay
+        )
         mDatePicker.setTitle("Select date")
         mDatePicker.show()
     }
@@ -119,6 +152,7 @@ class SignUpActivity : AppCompatActivity() {
             if (resultCode == Activity.RESULT_OK) {
                 profilePicture.setImageURI(uri)
                 uri = data.data
+                @Suppress("DEPRECATION")
                 val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
                 val cursor: Cursor? = contentResolver.query(
                     uri!!,
@@ -192,16 +226,27 @@ class SignUpActivity : AppCompatActivity() {
     private fun prepareUserData(id: String, email: String): User {
         @Suppress("SpellCheckingInspection")
         val time = SimpleDateFormat("yyyyMMddHHmmss").format(Date())
+        var userDoctorType: String? = null
+        var userDegree: String? = null
+        var userCurrentDesignation: String? = null
+        if (findViewById<RadioButton>(accountType.checkedRadioButtonId).text.toString() == "Doctor") {
+            userDoctorType = doctorType.selectedItem.toString()
+            userDegree = degree.text.toString()
+            userCurrentDesignation = currentDesignation.text.toString()
+        }
         return User(
             auth.currentUser!!.uid,
             email,
             fullName.text.toString(),
             mobileNumber.text.toString(),
-            accountType.selectedItem.toString(),
+            findViewById<RadioButton>(accountType.checkedRadioButtonId).text.toString(),
             bloodType.text.toString(),
             birthday.text.toString(),
             "$id.jpg",
-            time
+            time,
+            userDoctorType,
+            userDegree,
+            userCurrentDesignation
         )
     }
 

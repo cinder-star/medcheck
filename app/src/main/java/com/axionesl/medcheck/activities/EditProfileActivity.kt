@@ -159,7 +159,7 @@ class EditProfileActivity : AppCompatActivity() {
             @Suppress("SpellCheckingInspection")
             val time = SimpleDateFormat("yyyyMMddHHmmss").format(Date())
             currentUser.lastUpdated = time
-            currentUser.profilePicturePath = currentUser.id+".jpg"
+            currentUser.profilePicturePath = currentUser.id + ".jpg"
             StorageWriter.upload(
                 "/user/" + currentUser.id + ".jpg", getByteData(uri!!),
                 OnSuccessListener {
@@ -167,7 +167,7 @@ class EditProfileActivity : AppCompatActivity() {
                 }, null
             )
         } else {
-           writeUserInfoIntoDatabase(currentUser)
+            writeUserInfoIntoDatabase(currentUser)
         }
     }
 

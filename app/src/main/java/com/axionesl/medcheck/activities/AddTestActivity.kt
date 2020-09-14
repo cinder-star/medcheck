@@ -12,7 +12,6 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.telephony.SmsManager
-import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -106,7 +105,7 @@ class AddTestActivity : AppCompatActivity() {
             GlideApp
                 .with(this)
                 .load(reference)
-                .signature(ObjectKey(test.testPicture+test.lastModified))
+                .signature(ObjectKey(test.testPicture + test.lastModified))
                 .into(testPhoto)
         }
         updateHeight(test.height)
@@ -184,7 +183,7 @@ class AddTestActivity : AppCompatActivity() {
     }
 
     private fun createMessage(test: Test): String? {
-        return "Your patient "+test.patientName+" has updated test. (id: " + test.id + ")."
+        return "Your patient " + test.patientName + " has updated test. (id: " + test.id + ")."
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

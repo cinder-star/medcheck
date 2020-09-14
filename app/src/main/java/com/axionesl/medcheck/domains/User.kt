@@ -9,5 +9,8 @@ data class User(
     var bloodType: String? = null,
     var dateOfBirth: String? = null,
     var profilePicturePath: String? = null,
-    var lastUpdated: String? = null
+    var lastUpdated: String? = null,
+    var doctorType: String? = null,
+    var degree: String? = null,
+    var currentDesignation: String? = null
 )

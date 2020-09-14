@@ -1,9 +1,9 @@
 package com.axionesl.medcheck.activities
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.axionesl.medcheck.R
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.ktx.auth
@@ -30,10 +30,11 @@ class ResetPasswordActivity : AppCompatActivity() {
             if (validate()) {
                 Firebase.auth.sendPasswordResetEmail(email.text.toString())
                     .addOnSuccessListener {
-                        Toast.makeText(this,"A recovery mail has been sent!", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this, "A recovery mail has been sent!", Toast.LENGTH_LONG)
+                            .show()
                     }
                     .addOnFailureListener {
-                        Toast.makeText(this,"Failed!", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this, "Failed!", Toast.LENGTH_LONG).show()
                     }
                     .addOnCompleteListener {
                         finish()

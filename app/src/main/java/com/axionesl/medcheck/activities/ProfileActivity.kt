@@ -8,7 +8,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.RadioButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.axionesl.medcheck.R
@@ -93,11 +92,12 @@ class ProfileActivity : AppCompatActivity() {
             birthDate.text = "None"
         }
         if (user.profilePicturePath != null) {
-            val picRef = Firebase.storage.reference.child("/user/"+Firebase.auth.currentUser!!.uid+".jpg")
+            val picRef =
+                Firebase.storage.reference.child("/user/" + Firebase.auth.currentUser!!.uid + ".jpg")
             GlideApp
                 .with(this)
                 .load(picRef)
-                .signature(ObjectKey(user.profilePicturePath+user.lastUpdated))
+                .signature(ObjectKey(user.profilePicturePath + user.lastUpdated))
                 .into(profilePicture)
         }
     }

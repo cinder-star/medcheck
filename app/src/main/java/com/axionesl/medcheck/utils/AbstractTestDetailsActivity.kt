@@ -7,7 +7,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.axionesl.medcheck.R
 import com.axionesl.medcheck.domains.Test
-import com.axionesl.medcheck.domains.User
 import com.bumptech.glide.signature.ObjectKey
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -103,20 +102,20 @@ abstract class AbstractTestDetailsActivity(private val xmlId: Int) : AppCompatAc
             testDate.text = test.date
             testWeightStatus.text = getWeightStatus(test.bmi)
             if (test.testPicture != null) {
-                val reference = Firebase.storage.reference.child("tests/"+test.testPicture)
+                val reference = Firebase.storage.reference.child("tests/" + test.testPicture)
                 GlideApp
                     .with(this)
                     .load(reference)
-                    .signature(ObjectKey(test.testPicture+test.lastModified))
+                    .signature(ObjectKey(test.testPicture + test.lastModified))
                     .into(testPicture)
             }
         }
     }
 
     private fun getWeightStatus(bmi: Double?): CharSequence? {
-        if (bmi!!<18.5) {
+        if (bmi!! < 18.5) {
             return "underweight"
-        } else if (bmi >=18.5 && bmi < 25.0) {
+        } else if (bmi >= 18.5 && bmi < 25.0) {
             return "normal"
         } else if (bmi >= 25.0 && bmi < 30.0) {
             return "overweight"
