@@ -15,6 +15,7 @@ import android.telephony.SmsManager
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatSpinner
 import com.axionesl.medcheck.R
 import com.axionesl.medcheck.domains.Test
 import com.axionesl.medcheck.domains.User
@@ -28,6 +29,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import io.paperdb.Paper
@@ -55,9 +60,17 @@ class AddTestActivity : AppCompatActivity() {
     private lateinit var testPhoto: ImageView
     private lateinit var addTestPhoto: FloatingActionButton
     private lateinit var feetRadio: RadioButton
+    private lateinit var doctorType: AppCompatSpinner
+    private lateinit var preferredDoctor: AppCompatSpinner
+    private lateinit var doctorListener: ValueEventListener
+    private var chosenType: String = "Medicine"
+    private var allType: ArrayList<String> = arrayListOf()
+    private var doctorList: ArrayList<String> = arrayListOf("None")
+    @Suppress("PrivatePropertyName")
     private val RESULT_LOAD_IMAGE = 1
     private var uri: Uri? = null
     private var test: Test? = null
+    private var preferredDoctorValue = "None"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,9 +97,31 @@ class AddTestActivity : AppCompatActivity() {
         testPhoto = findViewById(R.id.test_photo)
         addTestPhoto = findViewById(R.id.add_test_photo)
         feetRadio = findViewById(R.id.feet)
+        doctorType = findViewById(R.id.doctor_type)
+        preferredDoctor = findViewById(R.id.preferred_doctor)
         if (intent.extras != null) {
             test = intent.extras!!.get("test") as Test
             updateUi(test!!)
+        }
+        doctorListener = object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                doctorList = arrayListOf("None")
+                snapshot.children.forEach {
+                    val name = it.child("fullName").getValue<String>()
+                    val type = it.child("doctorType").getValue<String>()
+                    if (type == chosenType) {
+                        doctorList.add(name!!)
+                    }
+                }
+                val doctorAdapter: ArrayAdapter<String> = ArrayAdapter(
+                    this@AddTestActivity,
+                    android.R.layout.simple_spinner_item,
+                    doctorList
+                )
+                preferredDoctor.adapter = doctorAdapter
+            }
+
+            override fun onCancelled(error: DatabaseError) {}
         }
     }
 
@@ -192,6 +227,7 @@ class AddTestActivity : AppCompatActivity() {
             if (resultCode == Activity.RESULT_OK) {
                 testPhoto.setImageURI(uri)
                 uri = data.data
+                @Suppress("DEPRECATION")
                 val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
                 val cursor: Cursor? = contentResolver.query(
                     uri!!,
@@ -240,6 +276,7 @@ class AddTestActivity : AppCompatActivity() {
         val mobileNumber: String? = Paper.book().read<User>("user").mobileNumber
         var details: String? = null
         var docNumber: String? = null
+        var preferredStatus = "In QueueNull"
         if (test != null) {
             docNumber = test!!.docNumber
         }
@@ -266,7 +303,8 @@ class AddTestActivity : AppCompatActivity() {
             testPhoto,
             patientName,
             lastModified,
-            docNumber
+            docNumber,
+            preferredStatus
         )
     }
 

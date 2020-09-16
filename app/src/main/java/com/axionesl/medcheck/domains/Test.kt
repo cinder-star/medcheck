@@ -22,5 +22,6 @@ data class Test(
     var testPicture: String? = null,
     var patientName: String? = null,
     var lastModified: String? = null,
-    var docNumber: String? = null
+    var docNumber: String? = null,
+    var preferredStatus: String? = null
 ) : Serializable
