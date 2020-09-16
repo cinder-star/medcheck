@@ -1,16 +1,13 @@
 package com.axionesl.medcheck.activities
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.axionesl.medcheck.R
-import com.axionesl.medcheck.domains.Test
 import com.axionesl.medcheck.domains.User
 import com.axionesl.medcheck.utils.DoctorListAdapter
-import com.axionesl.medcheck.utils.PatientAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
@@ -29,7 +26,8 @@ class DoctorViewActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        doctorList.layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
+        doctorList.layoutManager =
+            StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
         prepareRecyclerView()
     }
 

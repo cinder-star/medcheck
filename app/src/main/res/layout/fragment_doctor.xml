@@ -4,25 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:gravity="center_horizontal"
+    android:orientation="vertical"
     tools:context=".fragments.DoctorFragment">
+
     <RadioGroup
         android:id="@+id/test_chooser"
         android:layout_width="wrap_content"
-        android:orientation="horizontal"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
         <RadioButton
             android:id="@+id/anyone"
-            android:text="@string/all"
-            android:checked="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/all" />
+
         <RadioButton
             android:id="@+id/mine"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/my"/>
+            android:text="@string/my" />
     </RadioGroup>
 
     <androidx.recyclerview.widget.RecyclerView

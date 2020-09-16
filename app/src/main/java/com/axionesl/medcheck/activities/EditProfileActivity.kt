@@ -54,6 +54,7 @@ class EditProfileActivity : AppCompatActivity() {
     private lateinit var currentDesignation: TextInputEditText
     private lateinit var degreeHolder: TextInputLayout
     private lateinit var currentDesignationHolder: TextInputLayout
+
     @Suppress("PrivatePropertyName")
     private val RESULT_LOAD_IMAGE = 1
     private var uri: Uri? = null

@@ -50,7 +50,7 @@ class DoctorListAdapter(
                 GlideApp
                     .with(context)
                     .load(ref)
-                    .signature(ObjectKey(user.profilePicturePath+user.lastUpdated))
+                    .signature(ObjectKey(user.profilePicturePath + user.lastUpdated))
                     .into(doctorPic)
             }
         }
