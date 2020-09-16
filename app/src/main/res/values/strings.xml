@@ -80,4 +80,6 @@
     <string name="user_doctor_type">Doctor Type:</string>
     <string name="user_degree">Degree:</string>
     <string name="user_current_designation">Current Designation:</string>
+    <string name="all">All</string>
+    <string name="my">My</string>
 </resources>

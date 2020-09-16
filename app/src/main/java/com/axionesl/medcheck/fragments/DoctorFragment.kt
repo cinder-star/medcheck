@@ -5,15 +5,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.axionesl.medcheck.R
 import com.axionesl.medcheck.activities.CreatePrescriptionActivity
 import com.axionesl.medcheck.domains.Test
+import com.axionesl.medcheck.domains.User
 import com.axionesl.medcheck.utils.PatientAdapter
 import com.axionesl.medcheck.utils.TestClickListener
 import com.firebase.ui.database.FirebaseRecyclerOptions
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import io.paperdb.Paper
@@ -34,6 +38,10 @@ class DoctorFragment : Fragment(), TestClickListener {
     private var param2: String? = null
 
     private lateinit var testList: RecyclerView
+    private lateinit var testChooser: RadioGroup
+    private lateinit var ref: DatabaseReference
+    private lateinit var allAdapter: PatientAdapter
+    private lateinit var myAdapter: PatientAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +58,7 @@ class DoctorFragment : Fragment(), TestClickListener {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_doctor, container, false)
         bindWidgets(view)
+        bindListeners(view)
         updateRecyclerView()
         return view
     }
@@ -61,20 +70,44 @@ class DoctorFragment : Fragment(), TestClickListener {
 
     private fun bindWidgets(view: View) {
         testList = view.findViewById(R.id.test_list)
+        testChooser = view.findViewById(R.id.test_chooser)
+        ref = Firebase.database.reference.child("/tests/")
+        ref.keepSynced(true)
+        val user = Paper.book().read<User>("user", null)
+        val myQuery = ref.orderByChild("preferredStatus")
+                .equalTo("In Queue"+user.fullName)
+        val allQuery = ref.orderByChild("preferredStatus")
+                .equalTo("In QueueNull")
+        val myOptions = FirebaseRecyclerOptions.Builder<Test>()
+            .setQuery(myQuery, Test::class.java)
+            .build()
+        val allOptions = FirebaseRecyclerOptions.Builder<Test>()
+            .setQuery(allQuery, Test::class.java)
+            .build()
+        myAdapter = PatientAdapter(activity!!, myOptions, this)
+        allAdapter = PatientAdapter(activity!!, allOptions, this)
+
+    }
+
+    private fun bindListeners(view: View) {
+        testChooser.setOnCheckedChangeListener { _, i ->
+            val radioButton: RadioButton = view.findViewById(i)
+            val text = radioButton.text.toString()
+            if (text == "All") {
+                myAdapter.stopListening()
+                testList.adapter = allAdapter
+                allAdapter.startListening()
+            } else {
+                allAdapter.stopListening()
+                testList.adapter = myAdapter
+                myAdapter.startListening()
+            }
+        }
     }
 
     private fun prepareRecyclerView() {
-        val ref = Firebase.database.reference.child("/tests/")
-        ref.keepSynced(true)
-        val query =
-            ref.orderByChild("status").equalTo("In Queue")
-        val options = FirebaseRecyclerOptions.Builder<Test>()
-            .setQuery(query, Test::class.java)
-            .build()
-
-        val adapter = PatientAdapter(activity!!, options, this)
-        testList.adapter = adapter
-        adapter.startListening()
+        testList.adapter = allAdapter
+        allAdapter.startListening()
     }
 
     companion object {
