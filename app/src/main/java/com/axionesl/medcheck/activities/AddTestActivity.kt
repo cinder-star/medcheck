@@ -12,6 +12,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.telephony.SmsManager
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -29,9 +30,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
+import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -64,8 +64,8 @@ class AddTestActivity : AppCompatActivity() {
     private lateinit var preferredDoctor: AppCompatSpinner
     private lateinit var doctorListener: ValueEventListener
     private var chosenType: String = "Medicine"
-    private var allType: ArrayList<String> = arrayListOf()
     private var doctorList: ArrayList<String> = arrayListOf("None")
+    private lateinit var reference: Query
     @Suppress("PrivatePropertyName")
     private val RESULT_LOAD_IMAGE = 1
     private var uri: Uri? = null
@@ -99,9 +99,15 @@ class AddTestActivity : AppCompatActivity() {
         feetRadio = findViewById(R.id.feet)
         doctorType = findViewById(R.id.doctor_type)
         preferredDoctor = findViewById(R.id.preferred_doctor)
+        reference = Firebase.database.reference
+            .child("user")
+            .orderByChild("accountType")
+            .equalTo("Doctor")
         if (intent.extras != null) {
             test = intent.extras!!.get("test") as Test
             updateUi(test!!)
+            doctorType.visibility = View.GONE
+            preferredDoctor.visibility = View.GONE
         }
         doctorListener = object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -184,6 +190,7 @@ class AddTestActivity : AppCompatActivity() {
         }
         createTest.setOnClickListener {
             if (validate()) {
+                createTest.isClickable = false
                 val test: Test = getTestData()
                 DatabaseWriter.write("/tests/" + test.id, test)
                 if (test.docNumber != null) {
@@ -215,6 +222,26 @@ class AddTestActivity : AppCompatActivity() {
             )
             startActivityForResult(i, RESULT_LOAD_IMAGE)
         }
+        doctorType.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                preferredDoctorValue = "None"
+                chosenType = doctorType.selectedItem.toString()
+                reference.removeEventListener(doctorListener)
+                reference.addListenerForSingleValueEvent(doctorListener)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        reference.addListenerForSingleValueEvent(doctorListener)
     }
 
     private fun createMessage(test: Test): String? {
@@ -276,9 +303,15 @@ class AddTestActivity : AppCompatActivity() {
         val mobileNumber: String? = Paper.book().read<User>("user").mobileNumber
         var details: String? = null
         var docNumber: String? = null
+        preferredDoctorValue = preferredDoctor.selectedItem.toString()
         var preferredStatus = "In QueueNull"
+        if (preferredDoctorValue != "None"){
+            preferredStatus = "In Queue$preferredDoctorValue"
+        }
         if (test != null) {
             docNumber = test!!.docNumber
+            val checkedBy = test!!.checkedBy
+            preferredStatus = "In Queue$checkedBy"
         }
         if (problemDetails.text.toString().isNotEmpty()) {
             details = problemDetails.text.toString()
