@@ -212,15 +212,15 @@
         <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/doctor_type"
             android:layout_width="match_parent"
-            android:layout_marginHorizontal="20dp"
             android:layout_height="40dp"
-            android:entries="@array/speciality_type"/>
+            android:layout_marginHorizontal="20dp"
+            android:entries="@array/speciality_type" />
 
         <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/preferred_doctor"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_marginHorizontal="20dp"/>
+            android:layout_marginHorizontal="20dp" />
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"

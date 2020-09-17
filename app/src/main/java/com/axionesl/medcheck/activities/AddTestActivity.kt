@@ -12,7 +12,6 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.telephony.SmsManager
-import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -30,7 +29,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.Query
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
@@ -66,6 +68,7 @@ class AddTestActivity : AppCompatActivity() {
     private var chosenType: String = "Medicine"
     private var doctorList: ArrayList<String> = arrayListOf("None")
     private lateinit var reference: Query
+
     @Suppress("PrivatePropertyName")
     private val RESULT_LOAD_IMAGE = 1
     private var uri: Uri? = null
@@ -109,7 +112,7 @@ class AddTestActivity : AppCompatActivity() {
             doctorType.visibility = View.GONE
             preferredDoctor.visibility = View.GONE
         }
-        doctorListener = object: ValueEventListener {
+        doctorListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 doctorList = arrayListOf("None")
                 snapshot.children.forEach {
@@ -222,7 +225,7 @@ class AddTestActivity : AppCompatActivity() {
             )
             startActivityForResult(i, RESULT_LOAD_IMAGE)
         }
-        doctorType.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+        doctorType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View?,
@@ -305,7 +308,7 @@ class AddTestActivity : AppCompatActivity() {
         var docNumber: String? = null
         preferredDoctorValue = preferredDoctor.selectedItem.toString()
         var preferredStatus = "In QueueNull"
-        if (preferredDoctorValue != "None"){
+        if (preferredDoctorValue != "None") {
             preferredStatus = "In Queue$preferredDoctorValue"
         }
         if (test != null) {
