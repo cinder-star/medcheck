@@ -82,4 +82,12 @@
             tools:ignore="ContentDescription" />
     </LinearLayout>
 
+    <Button
+        android:id="@+id/create_appointment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="@string/request_new_appointment"
+        android:layout_marginHorizontal="20dp"/>
+
 </LinearLayout>

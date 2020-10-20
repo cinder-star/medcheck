@@ -83,4 +83,6 @@
     <string name="all">All</string>
     <string name="my">My</string>
     <string name="time">Time</string>
+    <string name="request_new_appointment">request new appointment</string>
+    <string name="doctor_name">Doctor Name:</string>
 </resources>
