@@ -45,7 +45,7 @@
             android:textColor="@color/black" />
 
         <TextView
-            android:id="@+id/test_status"
+            android:id="@+id/appointment_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
@@ -68,7 +68,7 @@
             android:textColor="@color/black" />
 
         <TextView
-            android:id="@+id/test_checked_by"
+            android:id="@+id/appointment_doctor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"

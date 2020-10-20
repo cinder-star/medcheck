@@ -5,5 +5,6 @@ data class Appointment (
     val patientName: String? = null,
     val patientNumber: String? = null,
     val date: String? = null,
-    val time: String? = null
+    val time: String? = null,
+    val status: String? = "Not Reviewed"
 )

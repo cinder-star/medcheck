@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -129,7 +128,8 @@ class AddAppointmentActivity : AppCompatActivity() {
             user!!.fullName,
             user.mobileNumber,
             date.text.toString(),
-            time.text.toString()
+            time.text.toString(),
+            "Not Reviewed"
         )
     }
 
