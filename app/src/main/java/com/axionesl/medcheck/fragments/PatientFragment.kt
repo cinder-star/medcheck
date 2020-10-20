@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.axionesl.medcheck.R
 import com.axionesl.medcheck.activities.AddTestActivity
 import com.axionesl.medcheck.activities.DoctorViewActivity
+import com.axionesl.medcheck.activities.PatientAppointmentActivity
 import com.axionesl.medcheck.activities.TestDetailsActivity
 import com.axionesl.medcheck.domains.Test
 import com.axionesl.medcheck.utils.PatientAdapter
@@ -40,6 +41,7 @@ class PatientFragment : Fragment(), TestClickListener {
     private lateinit var addTest: FloatingActionButton
     private lateinit var testList: RecyclerView
     private lateinit var viewDoctors: FloatingActionButton
+    private lateinit var patientAppointment: FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,6 +72,7 @@ class PatientFragment : Fragment(), TestClickListener {
         addTest = view.findViewById(R.id.add_test)
         testList = view.findViewById(R.id.test_list)
         viewDoctors = view.findViewById(R.id.view_doctors)
+        patientAppointment = view.findViewById(R.id.patient_appointment)
     }
 
     private fun bindListeners() {
@@ -78,6 +81,9 @@ class PatientFragment : Fragment(), TestClickListener {
         }
         viewDoctors.setOnClickListener {
             activity!!.startActivity(Intent(activity, DoctorViewActivity::class.java))
+        }
+        patientAppointment.setOnClickListener {
+            activity!!.startActivity(Intent(activity, PatientAppointmentActivity::class.java))
         }
     }
 
