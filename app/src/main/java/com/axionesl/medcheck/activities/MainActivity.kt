@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -37,12 +38,11 @@ class MainActivity : AppCompatActivity() {
             )
             != PackageManager.PERMISSION_GRANTED
         ) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(
+            if (!ActivityCompat.shouldShowRequestPermissionRationale(
                     this,
                     Manifest.permission.SEND_SMS
                 )
             ) {
-            } else {
                 ActivityCompat.requestPermissions(
                     this,
                     arrayOf(Manifest.permission.SEND_SMS),
@@ -84,5 +84,13 @@ class MainActivity : AppCompatActivity() {
         manager.commit()
     }
 
-
+    override fun onBackPressed() {
+        AlertDialog.Builder(this)
+            .setMessage("Exit app?")
+            .setPositiveButton("Yes") { _, _ ->
+                finishAffinity()
+            }
+            .setNegativeButton("No", null)
+            .show()
+    }
 }

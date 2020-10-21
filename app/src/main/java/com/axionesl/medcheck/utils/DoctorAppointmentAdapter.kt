@@ -13,30 +13,36 @@ import com.firebase.ui.database.FirebaseRecyclerOptions
 
 class DoctorAppointmentAdapter(
     private val context: Context,
-    options: FirebaseRecyclerOptions<Appointment>
+    options: FirebaseRecyclerOptions<Appointment>,
+    private val origin: String
 ) : AppointmentAdapter(context, options) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
             LayoutInflater.from(context).inflate(R.layout.row_doctor_appointment, parent, false)
-        return ViewHolder(view)
+        return ViewHolder(view, origin)
     }
 
-    class ViewHolder(itemView: View) : AppointmentAdapter.ViewHolder(itemView) {
+    class ViewHolder(itemView: View, private val origin: String) :
+        AppointmentAdapter.ViewHolder(itemView) {
         override fun bindView(appointment: Appointment) {
             super.bindView(appointment)
             val acceptButton: Button = itemView.findViewById(R.id.accept)
             val rejectButton: Button = itemView.findViewById(R.id.reject)
             acceptButton.setOnClickListener {
                 appointment.status = "Accepted"
-                appointment.doctorStatus = appointment.doctorName + "Accepted"
+                appointment.doctorStatus = "Accepted" + appointment.doctorName
                 DatabaseWriter.write("/appointments/" + appointment.id, appointment)
                 sendSms(appointment)
             }
             rejectButton.setOnClickListener {
                 appointment.status = "Rejected"
-                appointment.doctorStatus = appointment.doctorName + "Rejected"
+                appointment.doctorStatus = "Rejected" + appointment.doctorName
                 DatabaseWriter.write("/appointments/" + appointment.id, appointment)
                 sendSms(appointment)
+            }
+            if (origin == "accepted") {
+                acceptButton.visibility = View.GONE
+                rejectButton.visibility = View.GONE
             }
         }
 
@@ -52,15 +58,15 @@ class DoctorAppointmentAdapter(
         }
 
         private fun createMessage(appointment: Appointment): String {
-            return "Your appointment "+
-                    appointment.id+
-                    " has been "+
-                    appointment.status+
-                    " by "+
-                    appointment.doctorName+
-                    ".\nAppintment Schedule:\nDate: "+
-                    appointment.date+
-                    "\nTime: "+
+            return "Your appointment " +
+                    appointment.id +
+                    " has been " +
+                    appointment.status +
+                    " by " +
+                    appointment.doctorName +
+                    ".\nAppintment Schedule:\nDate: " +
+                    appointment.date +
+                    "\nTime: " +
                     appointment.time
         }
     }
