@@ -12,11 +12,13 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.axionesl.medcheck.R
 import com.axionesl.medcheck.activities.CreatePrescriptionActivity
+import com.axionesl.medcheck.activities.DoctorAppointmentActivity
 import com.axionesl.medcheck.domains.Test
 import com.axionesl.medcheck.domains.User
 import com.axionesl.medcheck.utils.PatientAdapter
 import com.axionesl.medcheck.utils.TestClickListener
 import com.firebase.ui.database.FirebaseRecyclerOptions
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -42,6 +44,7 @@ class DoctorFragment : Fragment(), TestClickListener {
     private lateinit var ref: DatabaseReference
     private lateinit var allAdapter: PatientAdapter
     private lateinit var myAdapter: PatientAdapter
+    private lateinit var doctorAppointment: FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,6 +74,7 @@ class DoctorFragment : Fragment(), TestClickListener {
     private fun bindWidgets(view: View) {
         testList = view.findViewById(R.id.test_list)
         testChooser = view.findViewById(R.id.test_chooser)
+        doctorAppointment = view.findViewById(R.id.doctor_appointment)
         ref = Firebase.database.reference.child("/tests/")
         ref.keepSynced(true)
         val user = Paper.book().read<User>("user", null)
@@ -102,6 +106,10 @@ class DoctorFragment : Fragment(), TestClickListener {
                 testList.adapter = myAdapter
                 myAdapter.startListening()
             }
+        }
+
+        doctorAppointment.setOnClickListener {
+            activity!!.startActivity(Intent(activity, DoctorAppointmentActivity::class.java))
         }
     }
 

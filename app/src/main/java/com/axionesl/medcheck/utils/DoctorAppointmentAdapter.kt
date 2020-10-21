@@ -58,7 +58,7 @@ class DoctorAppointmentAdapter(
                     appointment.status+
                     " by "+
                     appointment.doctorName+
-                    " on:\nDate: "+
+                    ".\nAppintment Schedule:\nDate: "+
                     appointment.date+
                     "\nTime: "+
                     appointment.time
