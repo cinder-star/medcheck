@@ -134,7 +134,7 @@ class AddAppointmentActivity : AppCompatActivity() {
     }
 
     private fun validate(): Boolean {
-        if (preferredDoctorValue == "None"){
+        if (preferredDoctorValue == "None") {
             return false
         }
         return true

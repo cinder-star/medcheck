@@ -29,7 +29,8 @@ class PatientAppointmentActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        appointmentList.layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
+        appointmentList.layoutManager =
+            StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
         prepareRecyclerView()
     }
 
@@ -47,7 +48,6 @@ class PatientAppointmentActivity : AppCompatActivity() {
         appointmentList.adapter = adapter
         adapter.startListening()
     }
-
 
 
     private fun bindWidgets() {

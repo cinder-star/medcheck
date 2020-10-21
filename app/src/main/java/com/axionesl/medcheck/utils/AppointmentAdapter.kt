@@ -12,7 +12,10 @@ import com.axionesl.medcheck.domains.Appointment
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 
-class AppointmentAdapter(private val context: Context, options: FirebaseRecyclerOptions<Appointment>) : FirebaseRecyclerAdapter<Appointment, AppointmentAdapter.ViewHolder>(
+class AppointmentAdapter(
+    private val context: Context,
+    options: FirebaseRecyclerOptions<Appointment>
+) : FirebaseRecyclerAdapter<Appointment, AppointmentAdapter.ViewHolder>(
     options
 ) {
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
