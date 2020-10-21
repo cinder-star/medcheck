@@ -85,4 +85,8 @@
     <string name="time">Time</string>
     <string name="request_new_appointment">request new appointment</string>
     <string name="doctor_name">Doctor Name:</string>
+    <string name="accept">accept</string>
+    <string name="reject">reject</string>
+    <string name="scheduled">Scheduled</string>
+    <string name="requested">Requested</string>
 </resources>
