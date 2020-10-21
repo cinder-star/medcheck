@@ -12,14 +12,14 @@ import com.axionesl.medcheck.domains.Appointment
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 
-class AppointmentAdapter(
+open class AppointmentAdapter(
     private val context: Context,
     options: FirebaseRecyclerOptions<Appointment>
 ) : FirebaseRecyclerAdapter<Appointment, AppointmentAdapter.ViewHolder>(
     options
 ) {
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bindView(appointment: Appointment) {
+    open class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        open fun bindView(appointment: Appointment) {
             val patientName: TextView = itemView.findViewById(R.id.appointment_patient)
             val doctorName: TextView = itemView.findViewById(R.id.appointment_doctor)
             val status: TextView = itemView.findViewById(R.id.appointment_status)

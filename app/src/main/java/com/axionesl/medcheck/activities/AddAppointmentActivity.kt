@@ -115,21 +115,23 @@ class AddAppointmentActivity : AppCompatActivity() {
             preferredDoctorValue = preferredDoctor.selectedItem.toString()
             if (validate()) {
                 val dateStamp = SimpleDateFormat("ddMMyyyy").format(Date())
-                DatabaseWriter.write("appointments/$dateStamp", getAppointment())
+                DatabaseWriter.write("appointments/$dateStamp", getAppointment(dateStamp))
                 finish()
             }
         }
     }
 
-    private fun getAppointment(): Appointment {
+    private fun getAppointment(id: String): Appointment {
         val user: User? = Paper.book().read("user", null)
         return Appointment(
+            id,
             preferredDoctorValue,
             user!!.fullName,
             user.mobileNumber,
             date.text.toString(),
             time.text.toString(),
-            "Not Reviewed"
+            "Not Reviewed",
+            "Not Reviewed$preferredDoctorValue"
         )
     }
 
